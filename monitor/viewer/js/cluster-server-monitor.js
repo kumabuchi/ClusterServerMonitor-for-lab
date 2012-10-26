@@ -6,7 +6,7 @@
 
 var panel = 0;
 var ready = 0;
-var url = "###";
+var url = "http://www.ai.cs.kobe-u.ac.jp/~kumabuchi/monitor";
 
 function init(){
 	if( ready == 1 )
@@ -211,6 +211,11 @@ function reload(){
 	}
 }
 
+function intervalLoad(){
+	refresh();
+	init();
+}
+
 $("#page-title").click(function(){
 	refresh();
 	init();
@@ -254,7 +259,5 @@ $("#about").click(function(){
 	$("#about-info").append(html);
 });
 
-
-
-setInterval("init()",600000); //10分ごとに自動更新
+setInterval("intervalLoad()",600000); //10分ごとに自動更新
 
