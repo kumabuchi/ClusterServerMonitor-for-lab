@@ -6,7 +6,7 @@
 
 var panel = 0;
 var ready = 0;
-var url = "http://www.ai.cs.kobe-u.ac.jp/~kumabuchi/monitor";
+var url = "monitor's url";
 
 function init(){
 	if( ready == 1 )
