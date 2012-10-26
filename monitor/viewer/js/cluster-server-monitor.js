@@ -31,7 +31,6 @@ function init(){
 		var cpuHtmlE = "<img src=\"http://chart.apis.google.com/chart?cht=p3&chd=t:";
 		var cpuHtmlP = "<img src=\"http://chart.apis.google.com/chart?cht=p3&chd=t:";
 		for(var i=1; i<spData.length; i++ ){
-		    //console.log(i+"   "+spData[i]); //debug
 		    var contentsNo = i%50;
 		    switch(contentsNo){
 		    case 1:
@@ -184,7 +183,6 @@ function loadTop( cluster ){
 				html += "<tr><td>"+spLine[0+fix]+"</td><td>"+spLine[1+fix]+"</td><td>"+spLine[2+fix]+"</td><td>"+spLine[3+fix]+"</td><td>"+spLine[4+fix]+"</td><td>"+spLine[5+fix]+"</td><td>"+spLine[6+fix]+"</td><td>"+spLine[7+fix]+"</td><td>"+spLine[8+fix]+"</td><td>"+spLine[9+fix]+"</td><td>"+spLine[10+fix]+"</td><td>"+spLine[11+fix]+"</td></tr>";
 		}
 		html += "</tbody></table>";
-		console.log(html);
 		$("#each").append(html);	
 		$(".bar").fadeOut(0);
 		ready = 0;
