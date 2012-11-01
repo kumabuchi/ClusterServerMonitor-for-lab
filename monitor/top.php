@@ -13,5 +13,5 @@ if( isset($_GET["c"]) ){
 		$cluster = "phoenix";
 	else
 		exit(-1);
-	system("ssh -o 'StrictHostKeyChecking no' -i /home/kumabuchi/.ssh/id_dsa kumabuchi@".$cluster.".cs.scitec.kobe-u.ac.jp top -b -n1 | sed '1,6d'");
+	system("ssh -o 'StrictHostKeyChecking no' -i /YOUR_SSH_KEY USER_NAME@".$cluster.".HOST top -b -n1 | sed '1,6d'");
 }
