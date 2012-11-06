@@ -1,17 +1,14 @@
 <?php
 header("Content-Type: application/json; charset=utf-8");
 
-require_once("config.php");
+require_once("../config.php");
 
 $clusterArray = "";
-exec("ssh -o \"StrictHostKeyChecking no\" -i /YOUR_SSH_KEY YOUR CLUSTER HOST 'w | head -n 1 | sed -e 's/min,//'; vmstat'", $nout);
-$clusterArray["niagara"] = decodeComm($nout);
-exec("ssh -o \"StrictHostKeyChecking no\" -i /YOUR_SSH_KEY YOUR CLUSTER HOST 'w | head -n 1 | sed -e 's/min,//'; vmstat'", $sout);
-$clusterArray["sarajevo"] = decodeComm($sout);
-exec("ssh -o \"StrictHostKeyChecking no\" -i /YOUR_SSH_KEY YOUR CLUSTER HOST 'w | head -n 1 | sed -e 's/min,//'; vmstat'", $eout);
-$clusterArray["endevour"] = decodeComm($eout);
-exec("ssh -o \"StrictHostKeyChecking no\" -i /YOUR_SSH_KEY YOUR CLUSTER HOST 'w | head -n 1 | sed -e 's/min,//'; vmstat'", $pout);
-$clusterArray["phoenix"] = decodeComm($pout);
+foreach( $servs as $name => $comm ){
+	exec($comm." 'w | head -n 1 | sed -e 's/min,//'; vmstat'", $out);
+	$clusterArray[$name] = decodeComm($out);
+	$out = null;
+}
 
 print( json_encode( $clusterArray ) );
 
@@ -19,9 +16,16 @@ function decodeComm( $commOut ){
 	if( !is_Array( $commOut ) )
 		return;
 	$arr = preg_split( "/[\s,]+/", $commOut[0]);
-	$retArray["lavg1"] = $arr[10];
-	$retArray["lavg5"] = $arr[11];
-	$retArray["lavg15"] = $arr[12];
+	$index = 0;
+	for($i=0; $i<count($arr); $i++ ){
+		if( $arr[$i] == "average:" ){
+			$index = $i+1;
+			break;
+		}
+	}
+	$retArray["lavg1"] = $arr[$index];
+	$retArray["lavg5"] = $arr[$index+1];
+	$retArray["lavg15"]= $arr[$index+2];
 	$arr = preg_split( "/[\s,]+/", $commOut[3]);
 	$prefix = 0;
 	if( count($arr) == 16 )

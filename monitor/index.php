@@ -1,5 +1,5 @@
 <?php
-
+header("Content-type: text/html");
 require_once("config.php");
 
 ?>
@@ -8,12 +8,13 @@ require_once("config.php");
 <html lang="ja">
     <head>
         <meta charset="utf-8">
-        <title>Cluster Server Monitor</title>
+        <title>Server Monitor</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="description" content="This program visualizes the command 'sar'. Server response Json format file.">
         <meta name="author" content="Kenji KUMABUCHI">
         <link href="css/bootstrap.css" rel="stylesheet">
 	<link type="text/css" rel="stylesheet" href="css/loading-bar.css"/>
+	<link href="css/jquery.slider.css" rel="stylesheet">
         <style>
             body {
                 padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
@@ -26,7 +27,7 @@ require_once("config.php");
         <![endif]-->
     </head>
 
-    <body onload="init()">
+    <body>
 
         <div class="container">
 
@@ -35,7 +36,7 @@ require_once("config.php");
 		<div class="span6">
 		   <!-- TITLE -->
          	   <h1 id="page-title">
-         	       <u>HPC CLUSTER SERVER</u>
+         	       <u><?php print($title); ?></u>
          	   </h1>
 		</div>
 
@@ -43,29 +44,38 @@ require_once("config.php");
 		    <!-- page buttons -->
        		    <div class="btn-toolbar" style="margin-top:20px;text-align:right">
                         <a class="btn btn-primary" href="#"><i class="icon-refresh icon-white"></i> Refresh</a>
+ 		        <a class="btn btn-danger" href="#" id="control"><i class="icon-arrow-left icon-white"></i>  NextPage</a>
 	                <div class="btn-group" style="text-align:left;">
-		           <a class="btn btn-success" href="#"><i class="icon-th-large icon-white"></i> Clusters</a>
+		           <a class="btn btn-success" href="#"><i class="icon-th-large icon-white"></i> Servers</a>
 		           <a class="btn btn-success dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
 		           <ul class="dropdown-menu">
-		        	  <li><a href="#" id="all-clusters"><i class="icon-th-large"></i> all clusters</a></li>
+		        	  <li><a href="#" id="all-clusters"><i class="icon-th-large"></i> all servers</a></li>
 		        	  <li class="divider"></li>
-		        	  <li><a href="#" id="niagara"><i class="icon-ok"></i> niagara</a></li>
-		        	  <li><a href="#" id="sarajevo"><i class="icon-ok"></i> sarajevo</a></li>
-		        	  <li><a href="#" id="endevour"><i class="icon-ok"></i> endevour</a></li>
-		           	  <li><a href="#" id="phoenix"><i class="icon-ok"></i> phoenix</a></li>
+				  <?php
+					foreach( $servs as $name => $comm ){
+						print('<li><a href="#" id="'.$name.'"><i class="icon-ok"></i> '.$name.'</a></li>');
+					}
+				  ?>
+			  </ul>
 		        </div>
  		        <a class="btn btn-warning" href="#" id="about"><i class="icon-hand-right icon-white"></i> about</a>
 		    </div>
 		</div>
 
+		<div id="slider" class="span12" style="height:700px;">  <!-- SLIDER -->
+
+		<div class="slide"> <!-- slide1 -->
+
                 <div id="cpu" class="span12">
                     <!-- CPU PERCENTAGE -->
                     <h3>CPU PERCENTAGE</h3>
                     <div class="row">
-			<div id="niagara-cpu" class="span3"><h4>niagara</h4></div>
-			<div id="sarajevo-cpu" class="span3"><h4>sarajevo</h4></div>
-			<div id="endevour-cpu" class="span3"><h4>endevour</h4></div>
-			<div id="phoenix-cpu" class="span3"><h4>phoenix</h4></div>
+			<?php
+				$span = "span". (12/count($servs));
+				foreach( $servs as $name => $comm ){
+					print('<div id="'.$name.'-cpu" class="'.$span.'"><h4>'.$name.'</h4></div>');
+				}
+			?>
 		    </div>
 		</div>
 
@@ -73,10 +83,12 @@ require_once("config.php");
                     <!-- MEMORY PERCENTAGE -->
                     <h3>MEMORY PERCENTAGE</h3>
                     <div class="row">
-			<div id="niagara-mem" class="span3"><h4>niagara</h4></div>
-			<div id="sarajevo-mem" class="span3"><h4>sarajevo</h4></div>
-			<div id="endevour-mem" class="span3"><h4>endevour</h4></div>
-			<div id="phoenix-mem" class="span3"><h4>phoenix</h4></div>
+			<?php
+				$span = "span". (12/count($servs));
+				foreach( $servs as $name => $comm ){
+					print('<div id="'.$name.'-mem" class="'.$span.'"><h4>'.$name.'</h4></div>');
+				}
+			?>
 		    </div>
                 </div>
 
@@ -100,6 +112,26 @@ require_once("config.php");
 
                 </div>
 
+		</div>
+
+		<div class="slide"> <!-- slide2 -->
+
+                <div id="iostat1" class="span12">
+                    <!-- IO STATUS -->
+                    <h3>Input/Output STATUS</h3>
+                    <div class="row">
+			<?php
+				$span = "span". (24/count($servs));
+				foreach( $servs as $name => $comm ){
+					print('<div id="'.$name.'-io" class="'.$span.'"><h4>'.$name.'</h4></div>');
+				}
+			?>
+		    </div>
+		</div>
+		</div>
+
+		</div> <!-- END SLIDER -->
+
             </div> <!-- end row -->
 
 	    <div id="each" class="span12">
@@ -113,25 +145,11 @@ require_once("config.php");
   	    </div>
 
         </div> <!-- end container -->
-
-        <!-- load javascript -->
-        <!--
-        <script src="js/bootstrap-transition.js"></script>
-        <script src="js/bootstrap-alert.js"></script>
-        <script src="js/bootstrap-modal.js"></script>
-        <script src="js/bootstrap-dropdown.js"></script>
-        <script src="js/bootstrap-scrollspy.js"></script>
-        <script src="js/bootstrap-tab.js"></script>
-        <script src="js/bootstrap-tooltip.js"></script>
-        <script src="js/bootstrap-popover.js"></script>
-        <script src="js/bootstrap-button.js"></script>
-        <script src="js/bootstrap-collapse.js"></script>
-        <script src="js/bootstrap-carousel.js"></script>
-        <script src="js/bootstrap-typeahead.js"></script>
-        -->
         <script src="js/jquery.js"></script>
 	<script src="js/bootstrap.min.js"></script>"
-        <script src="js/cluster-server-monitor.js"></script>
+	<script src="js/jquery.slider.min.js"></script>
+        <script src="js/cluster-server-monitor.php"></script>
+	<?php //require_once("js/cluster-server-monitor.php"); ?>
     </body>
 </html>
 
