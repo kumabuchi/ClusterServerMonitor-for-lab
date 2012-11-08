@@ -121,7 +121,7 @@ require_once("config.php");
                     <h3>Input/Output STATUS</h3>
                     <div class="row">
 			<?php
-				$span = "span". (24/count($servs));
+				$span = count($servs) == 1 ? "span12" : "span6";
 				foreach( $servs as $name => $comm ){
 					print('<div id="'.$name.'-io" class="'.$span.'"><h4>'.$name.'</h4></div>');
 				}
@@ -149,7 +149,6 @@ require_once("config.php");
 	<script src="js/bootstrap.min.js"></script>"
 	<script src="js/jquery.slider.min.js"></script>
         <script src="js/cluster-server-monitor.php"></script>
-	<?php //require_once("js/cluster-server-monitor.php"); ?>
     </body>
 </html>
 

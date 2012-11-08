@@ -5,7 +5,7 @@ require_once("../config.php");
 
 $clusterArray = "";
 foreach( $servs as $name => $comm ){
-	exec($comm." 'w | head -n 1 | sed -e 's/min,//'; vmstat'", $out);
+	exec($comm." 'w | head -n 1 | sed -e 's/min,//'; vmstat 1 2;'", $out);
 	$clusterArray[$name] = decodeComm($out);
 	$out = null;
 }
@@ -26,7 +26,7 @@ function decodeComm( $commOut ){
 	$retArray["lavg1"] = $arr[$index];
 	$retArray["lavg5"] = $arr[$index+1];
 	$retArray["lavg15"]= $arr[$index+2];
-	$arr = preg_split( "/[\s,]+/", $commOut[3]);
+	$arr = preg_split( "/[\s,]+/", $commOut[4]);
 	$prefix = 0;
 	if( count($arr) == 16 )
 		$prefix = -1;

@@ -29,6 +29,8 @@ function init(){
 	
 	function infosCallback(data){
 
+		infosData = data;
+
 	 	var loadAvgHtml = "<table class=\"table table-striped\"><thead><tr><th></th><th>1m</th><th>5m</th><th>15m</th><tr></thead><tbody>";
 ');
 
@@ -98,15 +100,12 @@ function init(){
 	function iostatCallback(data){
 	');
 
-	// IO STATE ONLY ONE SERVER	
 	foreach( $servs as $name => $comm ){
-		print('$("#'.$name.'-io").html("<h4>'.$name.'</h4>"+ buildIOstatHtml(\''.$name.'\',data["'.$name.'"] ? data["'.$name.'"] :null) );');
+		print('if( data["'.$name.'"] ) $("#'.$name.'-io").html("<h4>'.$name.'</h4>"+ buildIOstatHtml(\''.$name.'\',data["'.$name.'"] ? data["'.$name.'"] :null) ); else  $("#'.$name.'-io").html("");');
 	}
 
 	print('
 		function buildIOstatHtml(server, cluster ){
-			if( !cluster )
-				return "NO STATE";
 			iostatData[server] = cluster;
 			cluster.sort(function(a,b){
 				return a.device > b.device ? 1 : -1;
