@@ -5,7 +5,7 @@ require_once("../config.php");
 
 $clusterArray = "";
 foreach( $servs as $name => $comm ){
-        exec($comm." ' iostat'", $out);
+        exec($comm." ' iostat 1 2'", $out);
         $clusterArray[$name] = decodeComm($out);
 	$out = null;
 }
@@ -20,9 +20,9 @@ function decodeComm( $commOut ){
 	$cnt = 0;
         for( $j=1; $j<count($commOut)-1; $j++ ){
                 $arr = preg_split( "/[\s,]+/", $commOut[$j]);
-		if( $arr[0] == "Device:" || $flag == 1 )
+		if( $arr[0] == "Device:" || $flag == 2 )
 			++$flag;
-                if( $flag >= 2 ){
+                if( $flag >= 3 ){
                         $retArray["device"] = $arr[0];
                         $retArray["tps"] = $arr[1];
                         $retArray["blkr_s"] = $arr[2];
