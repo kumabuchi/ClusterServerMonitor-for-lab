@@ -8,6 +8,17 @@ $servs = array(
 "foster"  => "ssh -o \"StrictHostKeyChecking no\" -i /home/kumabuchi/.ssh/id_dsa kumabuchi@foster.cs.scitec.kobe-u.ac.jp"
 );
 
+// ###TOPコマンドで表示しない項目のユーザ,コマンド
+$filter = array(
+"root",
+"top",
+"sshd",
+"ssh",
+"bash",
+"sftp-server",
+"sshfs"
+"apache"
+);
 
 // ***全ページ共通の処理***
 // アクセスを学内に限定
