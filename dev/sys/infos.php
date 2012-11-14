@@ -2,20 +2,30 @@
 header("Content-Type: application/json; charset=utf-8");
 
 require_once("../config.php");
+require_once("multilib.php");
 
-$clusterArray = "";
-foreach( $servs as $name => $comm ){
-	exec($comm." 'w | head -n 1 | sed -e 's/min,//'; vmstat 1 2;'", $out);
-	$clusterArray[$name] = decodeComm($out);
-	$out = null;
+if( isset($_GET["s"]) ){
+	system($servs[$_GET["s"]]." ' uptime | sed -e 's/min,//'; vmstat 1 2;'");
+}else{
+	$url_list = array();
+	foreach( $servs as $name => $comm ){
+		$url_list[] = $url."/sys/infos.php?s=".$name;
+	}
+	$res = fetch_multi_url($url_list);
+	$index = 0;
+	$clusterArray = "";
+	foreach( $servs as $name => $comm ){
+		$clusterArray[$name] = decodeComm($res[$index]);
+		++$index;
+	}
+	print( json_encode( $clusterArray ) );
 }
 
-print( json_encode( $clusterArray ) );
-
 function decodeComm( $commOut ){
-	if( !is_Array( $commOut ) )
+	$lines = explode("\n",$commOut);
+	if( !is_Array( $lines ) )
 		return;
-	$arr = preg_split( "/[\s,]+/", $commOut[0]);
+	$arr = preg_split( "/[\s,]+/", $lines[0]);
 	$index = 0;
 	for($i=0; $i<count($arr); $i++ ){
 		if( $arr[$i] == "average:" ){
@@ -26,7 +36,7 @@ function decodeComm( $commOut ){
 	$retArray["lavg1"] = $arr[$index];
 	$retArray["lavg5"] = $arr[$index+1];
 	$retArray["lavg15"]= $arr[$index+2];
-	$arr = preg_split( "/[\s,]+/", $commOut[4]);
+	$arr = preg_split( "/[\s,]+/", $lines[4]);
 	$prefix = 0;
 	if( count($arr) == 16 )
 		$prefix = -1;

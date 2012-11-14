@@ -18,7 +18,7 @@ function decodeComm( $commOut ){
 		$arr = preg_split( "/[\s,]+/", $commOut[$j]);
 		$prefix = $arr[0] == "" ? 1 : 0;
 
-		if( $arr[0] != null && $arr[1+$prefix] != "root" && $arr[11+$prefix] != "top" && $arr[11+$prefix] != "sshd" ){
+		if( $arr[0] != null && $arr[1+$prefix] != "root" && $arr[11+$prefix] != "top" && $arr[11+$prefix] != "sshd" &&  $arr[11+$prefix] != "ssh" && $arr[11+$prefix] != "bash" &&  $arr[11+$prefix] != "sftp-server" && $arr[11+$prefix] != "sshfs" ){
 			$retArray["PID"] = $arr[0+$prefix];
 			$retArray["USER"] = $arr[1+$prefix];
 			$retArray["PR"] = $arr[2+$prefix];
