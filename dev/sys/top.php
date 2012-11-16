@@ -19,7 +19,7 @@ function decodeComm( $commOut ){
 		$arr = preg_split( "/[\s,]+/", $commOut[$j]);
 		$prefix = $arr[0] == "" ? 1 : 0;
 
-		if( $arr[0] != null && !(in_array($arr[1+$prefix], $filter) || in_array($arr[11+$prefix], $filter) ) ){
+		if( $arr[0+$prefix] != null && !(in_array($arr[1+$prefix], $filter) || in_array($arr[11+$prefix], $filter) ) ){
 			$retArray["PID"] = $arr[0+$prefix];
 			$retArray["USER"] = $arr[1+$prefix];
 			$retArray["PR"] = $arr[2+$prefix];
