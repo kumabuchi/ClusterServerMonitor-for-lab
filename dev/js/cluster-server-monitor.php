@@ -9,6 +9,7 @@ var sortorderio = 1;
 var iostatData = null;
 var infosData = null;
 var topinfo = null;
+var loadTime = 0;
 
 function init(){
 	if( ready == 1 )
@@ -213,21 +214,24 @@ function reload(){
 	if( ready == 1 )
 		return;
 	refresh();
-	infosData = null;
-	iostatData = null;
 	switch(panel){
 	case 0:
+		infosData = null;
+		iostatData = null;
 		init();
+		setTimeInfo(0);
 		break;
 	case 1:
 	case 2:
 	case 3:
 	case 4:
-		loadTop(panel);
 		break;
 	case 5:
 		$("#about").click();
 		break;	
+	default :
+		loadTop(panel);
+		break;
 	}
 }
 
@@ -236,6 +240,16 @@ function intervalLoad(){
 	iostatData = null;
 	refresh();
 	init();
+	setTimeInfo(0);
+}
+
+function setTimeInfo(time){
+	if( time == 0 ){ loadTime = 0;  $("#time-info").html("just now");}
+	else{ $("#time-info").html(time+" min before"); }
+	if( time >= 8 ){ $("#time-info").attr({"class":"lead text-warning"});}
+	else if( time >= 5 ){ $("#time-info").attr({"class":"lead text-success"});}
+	else { $("#time-info").attr({"class":"lead text-info"});}
+	loadTime++;
 }
 
 $("#page-title").click(function(){
@@ -282,6 +296,9 @@ $(function(){
 });
 
 setInterval("intervalLoad()",600000);
+
+setInterval("setTimeInfo(loadTime)",60000);
+
 ');
 
 ?>

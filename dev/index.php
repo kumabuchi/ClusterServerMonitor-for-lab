@@ -33,11 +33,15 @@ require_once("config.php");
 
             <div id="top" class="row">
 
-		<div class="span6">
+		<div class="span5">
 		   <!-- TITLE -->
          	   <h1 id="page-title">
          	       <u><?php print($title); ?></u>
          	   </h1>
+		</div>
+
+		<div class="span2" style="margin-top:22px;text-align:right;">
+		   <p class="text-info lead" id="time-info"></p>
 		</div>
 
 		<div class="span5">
@@ -146,7 +150,7 @@ require_once("config.php");
 
         </div> <!-- end container -->
         <script src="js/jquery.js"></script>
-	<script src="js/bootstrap.min.js"></script>"
+	<script src="js/bootstrap.min.js"></script>
 	<script src="js/jquery.slider.min.js"></script>
         <script src="js/cluster-server-monitor.php"></script>
     </body>

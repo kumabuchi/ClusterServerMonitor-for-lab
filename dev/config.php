@@ -16,7 +16,7 @@ $filter = array(
 "ssh",
 "bash",
 "sftp-server",
-"sshfs"
+"sshfs",
 "apache"
 );
 
