@@ -10,6 +10,7 @@ var iostatData = null;
 var infosData = null;
 var topinfo = null;
 var loadTime = 0;
+var timeHandle = null;
 
 function init(){
 	if( ready == 1 )
@@ -244,7 +245,8 @@ function intervalLoad(){
 }
 
 function setTimeInfo(time){
-	if( time == 0 ){ loadTime = 0;  $("#time-info").html("just now");}
+	if( time >= 10 ){ return; }
+	if( time == 0 ){ clearInterval(timeHandle); timeHandle = setInterval("setTimeInfo(loadTime)",60000); loadTime = 0;  $("#time-info").html("just now");}
 	else{ $("#time-info").html(time+" min before"); }
 	if( time >= 8 ){ $("#time-info").attr({"class":"lead text-warning"});}
 	else if( time >= 5 ){ $("#time-info").attr({"class":"lead text-success"});}
@@ -295,9 +297,9 @@ $(function(){
      });
 });
 
-setInterval("intervalLoad()",600000);
+timeHandle = setInterval("setTimeInfo(loadTime)",60000);
 
-setInterval("setTimeInfo(loadTime)",60000);
+setInterval("intervalLoad()",600000);
 
 ');
 

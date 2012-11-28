@@ -7,6 +7,7 @@ require_once("multilib.php");
 if( isset($_GET["s"]) ){
         system($servs[$_GET["s"]]." ' iostat 1 2'");
 }else{
+	write_log($_SERVER["REQUEST_URI"]);
         $url_list = array();
         foreach( $servs as $name => $comm ){
                 $url_list[] = $url."/sys/iostat.php?s=".$name;
