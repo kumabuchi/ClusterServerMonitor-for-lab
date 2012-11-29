@@ -7,7 +7,8 @@ $logdir= "/mnt/monitor_log/dev";
 
 // ###サーバ情報を4つまで記述### NAME => SSH_COMMAND
 $servs = array(
-		"foster"  => "ssh -o \"StrictHostKeyChecking no\" -i /home/kumabuchi/.ssh/id_dsa kumabuchi@foster.cs.scitec.kobe-u.ac.jp"
+		"foster"  => "ssh -o \"StrictHostKeyChecking no\" -i /home/kumabuchi/.ssh/id_dsa kumabuchi@foster.cs.scitec.kobe-u.ac.jp",
+		"rubicon"  => "ssh -o \"StrictHostKeyChecking no\" -i /home/kumabuchi/.ssh/id_dsa kumabuchi@rubicon.cs.scitec.kobe-u.ac.jp"
 	      );
 
 // ###TOPコマンドで表示しない項目のユーザ,コマンド
@@ -21,13 +22,6 @@ $filter = array(
 		"sshfs",
 		"apache"
 	       );
-
-// ***全ページ共通の処理***
-// アクセスを学内に限定
-if( !preg_match("/^133.30.112./", $_SERVER["REMOTE_ADDR"]) ){
-		print("<html><body><h1>403 Access Forbidden!</h1></body></html>");
-		exit(-1);
-}
 
 
 
@@ -44,4 +38,14 @@ function write_log( $mode ){
 		error_log($time.",".$_SERVER["REMOTE_ADDR"].",".gethostbyaddr($_SERVER["REMOTE_ADDR"]).",".$_SERVER["HTTP_USER_AGENT"].",".$mode."\n",3,$logdir."/".$date.".log");
 	}
 }
+
+// アクセスを学内に限定
+function access_control(){
+	if( !preg_match("/^133.30.112./", $_SERVER["REMOTE_ADDR"]) ){
+//		print("<html><body><h1>403 Access Forbidden!</h1></body></html>");
+//		exit(-1);
+	}
+}
+
+
 

@@ -2,6 +2,8 @@
 header("Content-type: text/html");
 require_once("config.php");
 
+access_control();
+
 ?>
 
 <!DOCTYPE html>
@@ -54,6 +56,7 @@ require_once("config.php");
 		           <a class="btn btn-success dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
 		           <ul class="dropdown-menu">
 		        	  <li><a href="#" id="all-clusters"><i class="icon-th-large"></i> all servers</a></li>
+		        	  <li><a href="#" id="history"><i class="icon-time"></i> history</a></li>
 		        	  <li class="divider"></li>
 				  <?php
 					foreach( $servs as $name => $comm ){
@@ -144,6 +147,30 @@ require_once("config.php");
 	    <div id="about-info" class="span12">
 	    </div>
 
+	    <div id="chart-title"style="mim-height:50px;"></div>
+	    <div id="chart" style="min-height:500px;display:none;"></div>
+	    <div class="row" id="chart-control" style="margin-top:50px;display:none;">
+		<div class="span4" style="text-align:right;">
+		<div class="btn-group">
+		<a class="btn" href="#" id="prevday">prevday</a>
+ 		<a class="btn"  href="#" id="nextday">nextday</a>
+		</div>
+		</div>
+		<div class="span3" style="text-align:center">
+		<div class="btn-group">
+		<a class="btn btn-warning" href="#" id="1lavg">1min</a>
+		<a class="btn btn-warning" href="#" id="5lavg">5min</a>
+		<a class="btn btn-warning" href="#" id="15lavg">15min</a>
+		</div>
+		</div>
+		<div class="span4" style="text-align:left;">
+		<div class="btn-group">
+		<a class="btn btn-primary" href="#" id="runproc">runninng</a>
+		<a class="btn btn-primary" href="#" id="blkproc">blocked</a>
+		</div>
+		</div>
+	    </div>
+
 	    <div class="bar" style="display : none;">
 		<span></span>
   	    </div>
@@ -153,6 +180,8 @@ require_once("config.php");
 	<script src="js/bootstrap.min.js"></script>
 	<script src="js/jquery.slider.min.js"></script>
         <script src="js/cluster-server-monitor.php"></script>
+        <script src="http://code.highcharts.com/highcharts.js"></script>
+        <script src="http://code.highcharts.com/modules/exporting.js"></script>
     </body>
 </html>
 

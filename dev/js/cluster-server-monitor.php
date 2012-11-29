@@ -11,6 +11,9 @@ var infosData = null;
 var topinfo = null;
 var loadTime = 0;
 var timeHandle = null;
+var hist_date = getDate();
+var hist_data = null;
+var hist_mode = "lavg1";
 
 function init(){
 	if( ready == 1 )
@@ -152,6 +155,9 @@ function refresh(){
 	$("#about-info").empty();
 	$("img").remove();
 	$("table").remove();
+	$("#chart").fadeOut();
+	$("#chart-control").fadeOut(0);
+	$("#chart-title").fadeOut(0);
 }
 
 function loadTop( cluster ){
@@ -230,6 +236,8 @@ function reload(){
 	case 5:
 		$("#about").click();
 		break;	
+	case 6:
+		break;
 	default :
 		loadTop(panel);
 		break;
@@ -254,6 +262,156 @@ function setTimeInfo(time){
 	loadTime++;
 }
 
+function history(mode,date){
+	console.log(date);
+	panel = 6;
+	ready = 1;
+	if( date == undefined ) date = hist_date;
+	if( mode == undefined ) mode = hist_mode;
+	if( hist_data == null || hist_date != date ){
+		$.getJSON(url+"/infos_hist.php?date="+date,buildChart);
+	}else{
+		buildChart(hist_data);
+	}
+	hist_date = date;
+	hist_mode = mode;
+
+	function buildChart(data){
+		$("#chart").fadeIn(0);
+		$("#chart-title").fadeIn(0);
+		$("#chart-title").html("<h3>"+date.substring(0,4)+"/"+date.substring(4,6)+"/"+date.substring(6,8)+"\'s history</h3>");
+		if( !data ){
+			$("#chart").html("<h3>NO DATA</h3>");
+			$("#chart-control").fadeIn(500);
+			ready=0;
+			return;
+		}
+		var title = null;
+		switch(mode){
+		case "lavg1":
+			title = "1 min LOAD AVERAGE";
+			break;
+		case "lavg5":
+			title = "5 min LOAD AVERAGE";
+			break;
+		case "lavg15":
+			title = "15 min LOAD AVERAGE";
+			break;
+		case "proc_r":
+			title = "PROCESS RUNNING NUM";
+			break;
+		case "proc_b":
+			title = "PROCESS BLOCKED NUM";
+			break;
+		default:
+			title = "UNKNOWN REQUEST";
+			break;
+		}
+		var category = new Array();
+		var linedata = new Array();
+		var linename = new Array();
+		var ini = true;
+		for( time in data ){
+			category.push(time);
+			for( serv in data[time] ){
+				linename[serv] = 1;
+				if( ini ){
+					linedata[serv] = new Array();
+				}
+				linedata[serv].push(data[time][serv][mode]);	
+			}
+			ini = false;
+		}
+		var argdata = new Array();
+		for( name in linedata ){
+			var linecon = new Array();
+			linecon["name"] = name;
+			linecon["data"] = NumberInArray(linedata[name]);
+			argdata.push(linecon);
+		}
+		console.log(category);
+		console.log(linedata);
+		console.log(argdata);
+	
+		$(function () {
+                    var chart;
+                    $(document).ready(function() {
+                        chart = new Highcharts.Chart({
+                            chart: {
+                                renderTo: \'chart\',
+                                type: \'line\',
+                                marginRight: 130,
+                                marginBottom: 25
+                            },
+                            title: {
+                                text: title,
+                                x: -20
+                            },
+                            subtitle: {
+                                text: \'alpha version\',
+                                x: -20
+                            },
+                            xAxis: {
+                                categories: category
+                            },
+                            yAxis: {
+                                title: {
+                                    text: \'measurement log values\'
+                                },
+                                plotLines: [{
+                                    value: 0,
+                                    width: 1,
+                                    color: \'#808080\'
+                                }]
+                            },
+                            tooltip: {
+                                formatter: function() {
+                                        return \'<b>\'+ this.series.name +\'</b><br/>\'+
+                                        this.x +\': \'+ this.y;
+                                }
+                            },
+                            legend: {
+                                layout: \'vertical\',
+                                align: \'right\',
+                                verticalAlign: \'top\',
+                                x: -10,
+                                y: 100,
+                                borderWidth: 0
+                            },
+                            series: argdata,
+			    exporting : {
+				enabled : false
+			    }
+                        });
+                    });
+                    
+                });
+		$("#chart-control").fadeIn(0);
+                ready = 0;	
+	}
+}
+
+function NumberInArray(inArray){
+	var retArray = new Array();
+	for( var i=0; i<inArray.length; i++){
+		retArray.push(Number(inArray[i]));
+	}
+	return retArray;
+}
+
+function getDate(fix){
+	var d = null;
+	if( fix == undefined ) d = new Date();
+	if( fix == 0 ) d = new Date(hist_date.substring(0,4)+","+hist_date.substring(4,6)+","+hist_date.substring(6,8));
+	if( fix == 1 ) d = new Date(hist_date.substring(0,4)+","+hist_date.substring(4,6)+","+(Number(hist_date.substring(6,8))+1));
+	if( fix == -1 )d = new Date(hist_date.substring(0,4),Number(hist_date.substring(4,6))-1,(Number(hist_date.substring(6,8))-1));
+        var month  = d.getMonth() + 1;
+        var day    = d.getDate();
+        if (month < 10) {month = "0" + month;}
+        if (day < 10) {day = "0" + day;}
+        return d.getFullYear()+""+month+""+day;
+}
+
 $("#page-title").click(function(){
 	refresh();
 	init();
@@ -268,6 +426,40 @@ $("#all-clusters").click(function(){
 	refresh();
 	init();
 });
+
+$("#history").click(function(){
+	refresh();
+	history("lavg1",getDate(0));
+});
+
+$("#prevday").click(function(){
+	history(hist_mode,getDate(-1));
+});
+
+$("#nextday").click(function(){
+	history(hist_mode,getDate(1));
+});
+
+$("#1lavg").click(function(){
+	history("lavg1",hist_date);
+});
+
+$("#5lavg").click(function(){
+	history("lavg5",hist_date);
+});
+
+$("#15lavg").click(function(){
+	history("lavg15",hist_date);
+});
+
+$("#runproc").click(function(){
+	history("proc_r",hist_date);
+});
+
+$("#blkproc").click(function(){
+	history("proc_b",hist_date);
+});
+
 ');
 
 foreach( $servs as $name => $comm ){
