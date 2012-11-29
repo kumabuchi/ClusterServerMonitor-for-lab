@@ -5,7 +5,6 @@ require_once("config.php");
 access_control();
 
 ?>
-
 <!DOCTYPE html>
 <html lang="ja">
     <head>
@@ -149,22 +148,25 @@ access_control();
 
 	    <div id="chart-title"style="mim-height:50px;"></div>
 	    <div id="chart" style="min-height:500px;display:none;"></div>
-	    <div class="row" id="chart-control" style="margin-top:50px;display:none;">
-		<div class="span4" style="text-align:right;">
+	    <div class="row" id="chart-control" style="margin:50px 0px;display:none;">
+		<div class="span3" style="text-align:right;min-width:220px;">
 		<div class="btn-group">
+                <a class="btn btn-inverse" id="today" href="#">date <i class="icon-arrow-right icon-white"></i></a>
 		<a class="btn" href="#" id="prevday">prevday</a>
  		<a class="btn"  href="#" id="nextday">nextday</a>
 		</div>
 		</div>
-		<div class="span3" style="text-align:center">
+		<div class="span4" style="text-align:center;min-width:300px;">
 		<div class="btn-group">
+                <a class="btn btn-inverse" href="#">load average <i class="icon-arrow-right icon-white"></i></a>
 		<a class="btn btn-warning" href="#" id="1lavg">1min</a>
 		<a class="btn btn-warning" href="#" id="5lavg">5min</a>
 		<a class="btn btn-warning" href="#" id="15lavg">15min</a>
 		</div>
 		</div>
-		<div class="span4" style="text-align:left;">
+		<div class="span3" style="text-align:left;min-width:220px">
 		<div class="btn-group">
+                <a class="btn btn-inverse" href="#">process <i class="icon-arrow-right icon-white"></i></a>
 		<a class="btn btn-primary" href="#" id="runproc">runninng</a>
 		<a class="btn btn-primary" href="#" id="blkproc">blocked</a>
 		</div>

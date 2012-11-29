@@ -237,6 +237,7 @@ function reload(){
 		$("#about").click();
 		break;	
 	case 6:
+		history(hist_mode,hist_date);
 		break;
 	default :
 		loadTop(panel);
@@ -255,7 +256,7 @@ function intervalLoad(){
 function setTimeInfo(time){
 	if( time >= 10 ){ return; }
 	if( time == 0 ){ clearInterval(timeHandle); timeHandle = setInterval("setTimeInfo(loadTime)",60000); loadTime = 0;  $("#time-info").html("just now");}
-	else{ $("#time-info").html(time+" min before"); }
+	else{ $("#time-info").html(time+" min ago"); }
 	if( time >= 8 ){ $("#time-info").attr({"class":"lead text-warning"});}
 	else if( time >= 5 ){ $("#time-info").attr({"class":"lead text-success"});}
 	else { $("#time-info").attr({"class":"lead text-info"});}
@@ -263,9 +264,9 @@ function setTimeInfo(time){
 }
 
 function history(mode,date){
-	console.log(date);
 	panel = 6;
 	ready = 1;
+	$("#control").addClass("disabled");
 	if( date == undefined ) date = hist_date;
 	if( mode == undefined ) mode = hist_mode;
 	if( hist_data == null || hist_date != date ){
@@ -312,7 +313,7 @@ function history(mode,date){
 		var linename = new Array();
 		var ini = true;
 		for( time in data ){
-			category.push(time);
+			category.push(time.substring(0,2)+":"+time.substring(2,4));
 			for( serv in data[time] ){
 				linename[serv] = 1;
 				if( ini ){
@@ -329,9 +330,6 @@ function history(mode,date){
 			linecon["data"] = NumberInArray(linedata[name]);
 			argdata.push(linecon);
 		}
-		console.log(category);
-		console.log(linedata);
-		console.log(argdata);
 	
 		$(function () {
                     var chart;
@@ -348,7 +346,7 @@ function history(mode,date){
                                 x: -20
                             },
                             subtitle: {
-                                text: \'alpha version\',
+                                text: \'history chart ver.alpha\',
                                 x: -20
                             },
                             xAxis: {
@@ -367,7 +365,7 @@ function history(mode,date){
                             tooltip: {
                                 formatter: function() {
                                         return \'<b>\'+ this.series.name +\'</b><br/>\'+
-                                        this.x +\': \'+ this.y;
+                                        \'time \'+this.x +\'<br/>value \'+ this.y;
                                 }
                             },
                             legend: {
@@ -378,10 +376,7 @@ function history(mode,date){
                                 y: 100,
                                 borderWidth: 0
                             },
-                            series: argdata,
-			    exporting : {
-				enabled : false
-			    }
+                            series: argdata
                         });
                     });
                     
@@ -402,9 +397,9 @@ function NumberInArray(inArray){
 function getDate(fix){
 	var d = null;
 	if( fix == undefined ) d = new Date();
-	if( fix == 0 ) d = new Date(hist_date.substring(0,4)+","+hist_date.substring(4,6)+","+hist_date.substring(6,8));
-	if( fix == 1 ) d = new Date(hist_date.substring(0,4)+","+hist_date.substring(4,6)+","+(Number(hist_date.substring(6,8))+1));
-	if( fix == -1 )d = new Date(hist_date.substring(0,4),Number(hist_date.substring(4,6))-1,(Number(hist_date.substring(6,8))-1));
+	if( fix == 0 ) d = new Date(hist_date.substring(0,4),Number(hist_date.substring(4,6))-1,Number(hist_date.substring(6,8)));
+	if( fix == 1 ) d = new Date(hist_date.substring(0,4),Number(hist_date.substring(4,6))-1,Number(hist_date.substring(6,8))+1);
+	if( fix == -1 )d = new Date(hist_date.substring(0,4),Number(hist_date.substring(4,6))-1,Number(hist_date.substring(6,8))-1);
         var month  = d.getMonth() + 1;
         var day    = d.getDate();
         if (month < 10) {month = "0" + month;}
@@ -460,6 +455,9 @@ $("#blkproc").click(function(){
 	history("proc_b",hist_date);
 });
 
+$("#today").click(function(){
+	history(hist_mode,getDate());
+});
 ');
 
 foreach( $servs as $name => $comm ){
