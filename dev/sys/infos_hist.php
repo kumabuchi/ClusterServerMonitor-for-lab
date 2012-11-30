@@ -18,7 +18,7 @@ if( $contents != false ){
 	$histories = explode("\n",$contents);
 	for( $i = 0; $i<count($histories)-1; $i++){
 		$data = explode("||",$histories[$i]);
-		$array[$data[0]] = json_decode($data[1]);
+		$array[$data[0]."\""] = json_decode($data[1]);
 	}
 }
 print( json_encode($array) );

@@ -287,6 +287,7 @@ function history(mode,date){
 			ready=0;
 			return;
 		}
+		hist_data = data;
 		var title = null;
 		switch(mode){
 		case "lavg1":
@@ -310,12 +311,10 @@ function history(mode,date){
 		}
 		var category = new Array();
 		var linedata = new Array();
-		var linename = new Array();
 		var ini = true;
 		for( time in data ){
 			category.push(time.substring(0,2)+":"+time.substring(2,4));
 			for( serv in data[time] ){
-				linename[serv] = 1;
 				if( ini ){
 					linedata[serv] = new Array();
 				}
@@ -333,7 +332,6 @@ function history(mode,date){
 	
 		$(function () {
                     var chart;
-                    $(document).ready(function() {
                         chart = new Highcharts.Chart({
                             chart: {
                                 renderTo: \'chart\',
@@ -378,12 +376,10 @@ function history(mode,date){
                             },
                             series: argdata
                         });
-                    });
-                    
                 });
-		$("#chart-control").fadeIn(0);
-                ready = 0;	
 	}
+	$("#chart-control").fadeIn(0);
+        ready = 0;	
 }
 
 function NumberInArray(inArray){

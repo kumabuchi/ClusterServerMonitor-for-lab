@@ -164,7 +164,7 @@ access_control();
 		<a class="btn btn-warning" href="#" id="15lavg">15min</a>
 		</div>
 		</div>
-		<div class="span3" style="text-align:left;min-width:220px">
+		<div class="span3" style="text-align:left;min-width:220px;">
 		<div class="btn-group">
                 <a class="btn btn-inverse" href="#">process <i class="icon-arrow-right icon-white"></i></a>
 		<a class="btn btn-primary" href="#" id="runproc">runninng</a>
