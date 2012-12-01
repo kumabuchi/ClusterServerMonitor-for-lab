@@ -4,8 +4,6 @@ header("Content-Type: application/json; charset=utf-8");
 require_once("../config.php");
 require_once("multilib.php");
 
-access_control();
-
 if( isset($_GET["s"]) ){
         system($servs[$_GET["s"]]." ' iostat 1 2'");
 }else{

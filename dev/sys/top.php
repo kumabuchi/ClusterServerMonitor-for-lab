@@ -4,7 +4,6 @@ header("Content-Type: application/json; charset=utf-8");
 require_once("../config.php");
 
 write_log($_SERVER["REQUEST_URI"]);
-access_control();
 
 if( isset($_GET["c"]) && isset($servs[$_GET["c"]])  ){
 	exec( $servs[$_GET['c']] . " top -b -n1 | sed '1,6d'", $out );

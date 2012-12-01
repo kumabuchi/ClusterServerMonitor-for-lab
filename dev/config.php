@@ -39,13 +39,4 @@ function write_log( $mode ){
 	}
 }
 
-// アクセスを学内に限定
-function access_control(){
-	if( !preg_match("/^133.30.112./", $_SERVER["REMOTE_ADDR"]) ){
-//		print("<html><body><h1>403 Access Forbidden!</h1></body></html>");
-//		exit(-1);
-	}
-}
-
-
 

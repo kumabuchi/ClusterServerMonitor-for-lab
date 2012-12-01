@@ -2,7 +2,6 @@
 
 require("../config.php");
 
-access_control();
 write_log($_SERVER["REQUEST_URI"]);
 
 $time = date("His");

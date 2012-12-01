@@ -1,9 +1,6 @@
 <?php
 header("Content-type: text/html");
 require_once("config.php");
-
-access_control();
-
 ?>
 <!DOCTYPE html>
 <html lang="ja">
