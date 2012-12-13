@@ -14,6 +14,7 @@ var timeHandle = null;
 var hist_date = getDate();
 var hist_data = null;
 var hist_mode = "lavg1";
+var observers = null;
 
 function init(){
 	if( ready == 1 )
@@ -403,6 +404,28 @@ function getDate(fix){
         return d.getFullYear()+""+month+""+day;
 }
 
+function setObserver(){
+	var obstmp = new Array();
+	$.getJSON(url+"/observers.php", function(data){
+		$("#observers").empty();
+		var guest = null;
+		for( var obs in data ){
+			if( obs == "guest" ){
+				obstmp.push(obs+" ("+data[obs]+")");
+				guest = obs+" ("+data[obs]+")";
+			}else{
+				obstmp.push(obs);
+				$("#observers").append("<li>"+obs+"</li>");
+			}
+		}
+		if( guest != null ){
+			$("#observers").append("<li>"+guest+"</li>");
+		}
+		observers = obstmp;	
+	});	
+}
+setObserver();
+
 $("#page-title").click(function(){
 	refresh();
 	init();
@@ -486,6 +509,8 @@ $(function(){
 timeHandle = setInterval("setTimeInfo(loadTime)",60000);
 
 setInterval("intervalLoad()",600000);
+
+setInterval("setObserver()",10000);
 
 ');
 

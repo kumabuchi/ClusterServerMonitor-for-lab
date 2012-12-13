@@ -174,6 +174,14 @@ require_once("config.php");
 		<span></span>
   	    </div>
 
+	    <div id='side-menu'>
+		<em><p class="lead">NowObservers</p></em>
+		<ul id="observers">
+		</ul>
+	    </div>
+	    <div class='opener'>
+	    </div>
+
         </div> <!-- end container -->
         <script src="js/jquery.js"></script>
 	<script src="js/bootstrap.min.js"></script>
@@ -181,6 +189,11 @@ require_once("config.php");
         <script src="js/cluster-server-monitor.php"></script>
         <script src="http://code.highcharts.com/highcharts.js"></script>
         <script src="http://code.highcharts.com/modules/exporting.js"></script>
+	<script>
+		$('.opener').click(function() {
+    			$("#side-menu").animate({width: 'toggle'}, 300);
+		});
+	</script>
     </body>
 </html>
 

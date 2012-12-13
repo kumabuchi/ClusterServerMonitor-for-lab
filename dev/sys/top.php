@@ -2,6 +2,7 @@
 header("Content-Type: application/json; charset=utf-8");
 
 require_once("../config.php");
+require_once("utility.php");
 
 write_log($_SERVER["REQUEST_URI"]);
 
