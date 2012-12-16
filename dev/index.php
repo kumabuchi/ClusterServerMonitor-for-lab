@@ -7,9 +7,10 @@ require_once("config.php");
     <head>
         <meta charset="utf-8">
         <title>Server Monitor</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="viewport" content="width=device-width, initial-scale=0.1">
         <meta name="description" content="This program visualizes the command 'sar'. Server response Json format file.">
         <meta name="author" content="Kenji KUMABUCHI">
+ 	<link type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/blitzer/jquery-ui.css" rel="stylesheet" />
         <link href="css/bootstrap.css" rel="stylesheet">
 	<link type="text/css" rel="stylesheet" href="css/loading-bar.css"/>
 	<link href="css/jquery.slider.css" rel="stylesheet">
@@ -28,6 +29,11 @@ require_once("config.php");
     <body>
 
         <div class="container">
+
+	<div class="alert alert-error" style="display:none;">
+	  <button type="button" class="close" onclick="javascript:dismissAlert();">&times;</button>
+	  <span id="alert-body"></span>
+	</div>
 
             <div id="top" class="row">
 
@@ -53,6 +59,7 @@ require_once("config.php");
 		           <ul class="dropdown-menu">
 		        	  <li><a href="#" id="all-clusters"><i class="icon-th-large"></i> all servers</a></li>
 		        	  <li><a href="#" id="history"><i class="icon-time"></i> history</a></li>
+		        	  <li><a href="#" id="alert-center"><i class="icon-envelope"></i> alert center</a></li>
 		        	  <li class="divider"></li>
 				  <?php
 					foreach( $servs as $name => $comm ){
@@ -148,7 +155,7 @@ require_once("config.php");
 	    <div class="row" id="chart-control" style="margin:50px 0px;display:none;">
 		<div class="span3" style="text-align:right;min-width:220px;">
 		<div class="btn-group">
-                <a class="btn btn-inverse" id="today" href="#">date <i class="icon-arrow-right icon-white"></i></a>
+                <a id="dp" class="btn btn-inverse"  href="#">date <input id="datepicker" type="hide"></input><i class="icon-arrow-right icon-white"></i></a>
 		<a class="btn" href="#" id="prevday">prevday</a>
  		<a class="btn"  href="#" id="nextday">nextday</a>
 		</div>
@@ -175,25 +182,62 @@ require_once("config.php");
   	    </div>
 
 	    <div id='side-menu'>
-		<em><p class="lead">NowObservers</p></em>
+		<em><p class="lead">Observers</p></em>
 		<ul id="observers">
 		</ul>
 	    </div>
 	    <div class='opener'>
 	    </div>
 
+		<div id="myModal" class="modal hide fade">
+		  <div class="modal-header">
+		    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		    <h3 id="modal-title">Mail alert center</h3>
+		  </div>
+		  <div class="modal-body" id="modal-contents">
+			<p class="lead">Set mail alert? Please push <strong>Save</strong> to add your alerts.</p>
+			<dl class="dl-horizontal">
+		            <dt>SERVER</dt>
+		            <dd id="server"></dd>
+		            <dt>PID</dt>
+		            <dd id="pid"></dd>
+		            <dt>COMMAND</dt>
+		            <dd id="comm"></dd>
+		            <dt>COMMAND USER</dt>
+		            <dd id="commuser"></dd>
+		            <dt>YOUR NAME</dt>
+		            <dd id="username"></dd>
+		        </dl>
+			<form class="form-horizontal">
+			  <div class="control-group">
+			    <label class="control-label" for="inputEmail">Mail to </label>
+			    <div class="controls">
+			      <input type="text" id="mailto" placeholder="Email">
+			    </div>
+			  </div>
+			</form>
+			<blockquote>
+			  <p>Mail Alert Center will send you Email when the program finished.<br/></p>
+			  <p>You can check your alert list on following page.</p>
+			  <p class="text-info">menu > servers > alerts</p>
+			</blockquote>
+			<p id="modal-error" class="text-error"></p>
+			<p id="modal-success" class="text-info"></p>
+		  </div>
+		  <div class="modal-footer">
+		    <a id="modal-close-btn" href="#" class="btn" data-dismiss="modal">Close</a>
+		    <a id="save-alert" class="btn btn-primary">Save</a>
+		  </div>
+		</div>
+
         </div> <!-- end container -->
         <script src="js/jquery.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
 	<script src="js/bootstrap.min.js"></script>
 	<script src="js/jquery.slider.min.js"></script>
         <script src="js/cluster-server-monitor.php"></script>
         <script src="http://code.highcharts.com/highcharts.js"></script>
         <script src="http://code.highcharts.com/modules/exporting.js"></script>
-	<script>
-		$('.opener').click(function() {
-    			$("#side-menu").animate({width: 'toggle'}, 300);
-		});
-	</script>
     </body>
 </html>
 

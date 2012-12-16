@@ -1,7 +1,9 @@
 <?php
 header("Content-type: application/x-javascript");
 require_once("../config.php");
-print('var panel = 0;
+
+print('
+var panel = 0;
 var ready = 0;
 var url = "'.$url.'/sys";
 var sortorder = 1;
@@ -9,12 +11,16 @@ var sortorderio = 1;
 var iostatData = null;
 var infosData = null;
 var topinfo = null;
+var serverName = null;
 var loadTime = 0;
 var timeHandle = null;
 var hist_date = getDate();
 var hist_data = null;
 var hist_mode = "lavg1";
 var observers = null;
+var alerts = null;
+var userName = null;
+var mailAddr = null;
 
 function init(){
 	if( ready == 1 )
@@ -172,6 +178,7 @@ function loadTop( cluster ){
 	foreach( $servs as $name => $comm ){
 		print('case "'.$name.'":
 			$("#each").append("<h3>'.$name.'\'s top</h3>");
+			serverName = "'.$name.'";
 			break;
 		');
 	}
@@ -184,7 +191,7 @@ function loadTop( cluster ){
 		if( !!datas ){
 			for( var i=0; i<datas.length; i++){
 				var data = datas[i];
-				html += "<tr><td>"+data.PID+"</td><td>"+data.USER+"</td><td>"+data.PR+"</td><td>"+data.NI+"</td><td>"+data.VIRT+"</td><td>"+data.RES+"</td><td>"+data.SHR+"</td><td>"+data.S+"</td><td>"+data["%CPU"]+"</td><td>"+data["%MEM"]+"</td><td>"+data.TIME+"</td><td>"+data.COMMAND+"</td></tr>";
+				html += "<tr><td><a href=\"javascript:am(\'"+data.PID+"\',\'"+data.USER+"\',\'"+data.COMMAND+"\');\">"+data.PID+"</a></td><td>"+data.USER+"</td><td>"+data.PR+"</td><td>"+data.NI+"</td><td>"+data.VIRT+"</td><td>"+data.RES+"</td><td>"+data.SHR+"</td><td>"+data.S+"</td><td>"+data["%CPU"]+"</td><td>"+data["%MEM"]+"</td><td>"+data.TIME+"</td><td>"+data.COMMAND+"</td></tr>";
 			}
 		}
 		html += "</tbody></table>";
@@ -206,11 +213,11 @@ function sortTop( row ){
 	});
 	sortorder *= -1;
 	var datas = topinfo;
-	var html = "<table id=\"topinfo\" class=\"table table-striped\"><thead><tr><th><a href=\"javascript:sortTop(\'PID\');\">PID</a></th><th><a href=\"javascript:sortTop(\'USER\');\">USER</a></th><th><a href=\"javascript:sortTop(\'PR\');\">PR</a></th><th><a href=\"javascript:sortTop(\'NI\');\">NI</a></th><th><a href=\"javascript:sortTop(\'VIRT\');\">VIRT</a></th><th><a href=\"javascript:sortTop(\'RES\');\">RES</a></th><th><a href=\"javascript:sortTop(\'SHR\');\">SHR</a></th><th><a href=\"javascript:sortTop(\'S\');\">S</a></th><th><a href=\"javascript:sortTop(\'%CPU\');\">%CPU</a></th><th><a href=\"javascript:sortTop(\'%MEM\');\">%MEM</a></th><th><a href=\"javascript:sortTop(\'TIME\');\">TIME+</a></th><th><a href=\"javascript:sortTop(\'COMMAND\');\">COMMAND</a.</th><tr></thead><tbody>";
+	var html = "<table id=\"topinfo\" class=\"table table-striped\"><thead><tr><th><a href=\"javascript:sortTop(\'PID\');\">PID</a></th><th><a href=\"javascript:sortTop(\'USER\');\">USER</a></th><th><a href=\"javascript:sortTop(\'PR\');\">PR</a></th><th><a href=\"javascript:sortTop(\'NI\');\">NI</a></th><th><a href=\"javascript:sortTop(\'VIRT\');\">VIRT</a></th><th><a href=\"javascript:sortTop(\'RES\');\">RES</a></th><th><a href=\"javascript:sortTop(\'SHR\');\">SHR</a></th><th><a href=\"javascript:sortTop(\'S\');\">S</a></th><th><a href=\"javascript:sortTop(\'%CPU\');\">%CPU</a></th><th><a href=\"javascript:sortTop(\'%MEM\');\">%MEM</a></th><th><a href=\"javascript:sortTop(\'TIME\');\">TIME+</a></th><th><a href=\"javascript:sortTop(\'COMMAND\');\">COMMAND</a></th><tr></thead><tbody>";
 	if( !!datas ){
       		for( var i=0; i<datas.length; i++){
                 	var data = datas[i];
-                	html += "<tr><td>"+data.PID+"</td><td>"+data.USER+"</td><td>"+data.PR+"</td><td>"+data.NI+"</td><td>"+data.VIRT+"</td><td>"+data.RES+"</td><td>"+data.SHR+"</td><td>"+data.S+"</td><td>"+data["%CPU"]+"</td><td>"+data["%MEM"]+"</td><td>"+data.TIME+"</td><td>"+data.COMMAND+"</td></tr>";
+                	html += "<tr><td><a href=\"javascript:am(\'data.PID\',\'data.USER\',\'data.COMMAND\');\">"+data.PID+"</a></td><td>"+data.USER+"</td><td>"+data.PR+"</td><td>"+data.NI+"</td><td>"+data.VIRT+"</td><td>"+data.RES+"</td><td>"+data.SHR+"</td><td>"+data.S+"</td><td>"+data["%CPU"]+"</td><td>"+data["%MEM"]+"</td><td>"+data.TIME+"</td><td>"+data.COMMAND+"</td></tr>";
         	}
 	}
         html += "</tbody></table>";
@@ -239,6 +246,9 @@ function reload(){
 		break;	
 	case 6:
 		history(hist_mode,hist_date);
+		break;
+	case 7:
+		$("#alert-center").click();
 		break;
 	default :
 		loadTop(panel);
@@ -424,7 +434,101 @@ function setObserver(){
 		observers = obstmp;	
 	});	
 }
-setObserver();
+
+function ar(pid,usr,cmd,server,mail){
+	var alertUrl = url+"/alert.php";
+	var params = "comm="+cmd+"&user="+usr+"&server="+server+"&pid="+pid+"&mailto="+mail+"&del=true";
+	console.log(alertUrl+"?"+params);
+	$.getJSON(alertUrl+"?"+params,function(status){
+		if( status.delete == "success" ){
+			$("#alert-"+pid).fadeOut(500);
+			for( var i=0; i<alerts.length; i++ ){
+				if( alerts[i]["PID"] == pid && alerts[i]["SERVER"] == server ){
+					alerts.splice(i,1);
+				}
+			}
+		}else{
+			$("#alert-body").html("<strong>ERROR!</strong> Cannot delete your alert. Please contact administrator.");
+			$(".alert").fadeIn(300);
+		}
+	});
+
+
+}
+
+function am(pid,usr,cmd){
+	if( userName == null || mailAddr == null ){
+		$("#alert-body").html("<strong>Sorry!</strong> We cannot identify you, so you cannot use alert center.");
+		$(".alert").fadeIn(300);
+		return;
+	}
+	$("#save-alert").fadeIn(0);
+	$("#modal-error").empty();
+	$("#modal-success").empty();
+	$("#server").html(serverName);
+	$("#pid").html(pid);
+	$("#comm").html(cmd);
+	$("#commuser").html(usr);
+	$("#username").html(userName);
+	$("#mailto").val(mailAddr);
+	$("#myModal").modal("show");
+}
+
+function saveAlert(){
+	var alertUrl = url+"/alert.php";
+	var params = "comm="+$(\'#comm\').html()+"&user="+$(\'#commuser\').html()+"&server="+$(\'#server\').html()+"&pid="+$(\'#pid\').html()+"&mailto="+$(\'#mailto\').val();
+	$.getJSON(alertUrl+"?"+params,function(status){
+		if( status.set == "success" ){
+			$("#modal-success").html("OK! Mail Alert is registered.");
+			$("#save-alert").fadeOut(300);
+		}else{
+			$("#save-alert").fadeOut(0);
+			$("#modal-error").html("ERROR!! Perhaps, this request may have already been registerd.");
+		}
+	});
+}
+
+function dismissAlert(){
+	$(".alert").fadeOut(300);
+}
+
+function sortAlert(row){
+	if( alerts == null ){
+		return;
+	}
+	$("#about-indo").empty();
+	alerts.sort(function(a, b) {
+		return ( a[row] < b[row]  ? sortorder : sortorder*(-1));
+	});
+	sortorder *= -1;
+	var html = "<h3>Mail Alert Center</h3><p class=\"lead\">Your alert list.</p>";
+	var alertTable = "<table id=\"alert-info\" class=\"table table-striped\"><thead><tr><th><a href=\"javascript:sortAlert(\'PID\');\">PID</a></th><th><a href=\"javascript:sortAlert(\'SERVER\');\">SERVER</a></th><th><a href=\"javascript:sortAlert(\'COMMAND\');\">COMMAND</a></th><th><a href=\"javascript:sortAlert(\'COMMUSER\');\">COMMAND USER</a></th><th><a href=\"javascript:sortAlert(\'MAILTO\');\">MAIL TO</a></th><th><a href=\"#\">delete</a></th></tr></thead><tbody>";
+	if( alerts.length != 0 ){
+		for( var i=0; i<alerts.length; i++ ){
+			var server = alerts[i].SERVER;
+			var pid = alerts[i].PID;
+			var command = alerts[i].COMMAND;
+			var commuser = alerts[i].COMMUSER;
+			var mailto = alerts[i].MAILTO;
+        		alertTable += "<tr id=\"alert-"+pid+"\"><td>"+pid+"</td><td>"+server+"</td><td>"+command+"</td><td>"+commuser+"</td><td>"+mailto+"</td><td><a href=\"javascript:ar(\'"+pid+"\',\'"+commuser+"\',\'"+command+"\',\'"+server+"\',\'"+mailto+"\');\">&times;</a></td></tr>";
+		}
+	}else{
+		alertTable = "<p class=\"text-info\">Your alert list is empty.";
+	}
+	$("#about-info").html(html+alertTable);
+}
+
+function identifyUser(){
+	var idUrl = url+"/alert.php?identify=true";
+	$.getJSON(idURl,function(json){
+		if( json.identify = true ){
+			userName = json.user_name;
+			mailAddr = json.mail_addr;
+		}
+	});
+}
+
+
 
 $("#page-title").click(function(){
 	refresh();
@@ -477,6 +581,37 @@ $("#blkproc").click(function(){
 $("#today").click(function(){
 	history(hist_mode,getDate());
 });
+
+$(".opener").click(function() {
+        $("#side-menu").animate({width: "toggle"}, 300);
+});
+
+$("#side-menu").click(function(){
+        $("#side-menu").animate({width: "toggle"}, 300);
+});
+
+
+$("#datepicker").datepicker({
+        changeMonth: true,
+        changeYear: true,
+        dateFormat: "yymmdd"
+});
+
+$("#dp").click(function(){
+        $("#datepicker").datepicker("show");
+});
+
+$("#datepicker").change(function(){
+        history(hist_mode,$("#datepicker").val())
+});
+
+$("#myModal").modal({
+ 	keyboard: true
+});
+
+$("#save-alert").click(function(){
+	saveAlert();
+});
 ');
 
 foreach( $servs as $name => $comm ){
@@ -493,8 +628,43 @@ $("#about").click(function(){
 	refresh();
 	$("#control").addClass("disabled");
 	$("#about-info").fadeIn(500);
-	var html = "<h3>about this application</h3><p class=\"lead\">Cluster Server Monitor can only be accessed from the network in kobe-u.<br/>Please feedback and request about this application...</p>"
-	$("#about-info").append(html);
+	var html = "<h3>about this application</h3><p class=\"lead\">Cluster Server Monitor can only be accessed from the network in kobe-u.<br/>Please feedback and request about this application...</p>";
+	$("#about-info").html(html);
+});
+
+$("#alert-center").click(function(){
+	panel = 7;
+	if( userName == null || mailAddr == null ){
+		$("#alert-body").html("<strong>Sorry!</strong> We cannot identify you, so you cannot use alert center.");
+		$(".alert").fadeIn(300);
+		return;
+	}
+	refresh();
+	$("#control").addClass("disabled");
+	$("#about-info").fadeIn(500);
+	alerts = [];
+        $(".bar").fadeIn(0);
+	var html = "<h3>Mail Alert Center</h3><p class=\"lead\">Your alert list.</p>";
+	$.getJSON(url+"/alert.php",function(data){
+		var alertTable = "<table id=\"alert-info\" class=\"table table-striped\"><thead><tr><th><a href=\"javascript:sortAlert(\'PID\');\">PID</a></th><th><a href=\"javascript:sortAlert(\'SERVER\');\">SERVER</a></th><th><a href=\"javascript:sortAlert(\'COMMAND\');\">COMMAND</a></th><th><a href=\"javascript:sortAlert(\'COMMUSER\');\">COMMAND USER</a></th><th><a href=\"javascript:sortAlert(\'MAILTO\');\">MAIL TO</a></th><th><a href=\"#\">delete</a></th></tr></thead><tbody>";
+		if( data.count != 0 ){
+			for( var key in data.alert ){
+				var keyContents = key.split(":");
+				var valContents = (data.alert[key]).split(":");
+				var server = keyContents[1];
+				var pid = keyContents[2];
+				var command = valContents[0];
+				var commuser = valContents[1];
+				var mailto = valContents[2];
+				alerts[alerts.length] = { PID:pid,SERVER:server,COMMAND:command,COMMUSER:commuser,MAILTO:mailto };
+                		alertTable += "<tr id=\'alert-"+pid+"\'><td>"+pid+"</td><td>"+server+"</td><td>"+command+"</td><td>"+commuser+"</td><td>"+mailto+"</td><td><a href=\"javascript:ar(\'"+pid+"\',\'"+commuser+"\',\'"+command+"\',\'"+server+"\',\'"+mailto+"\');\">&times;</a></td></tr>";
+        		}
+		}else{
+			alertTable = "<p class=\"text-info\">Your alert list is empty.";
+		}
+        	$(".bar").fadeOut(0);
+		$("#about-info").html(html+alertTable);
+	});
 });
 
 $(function(){
@@ -506,12 +676,18 @@ $(function(){
      });
 });
 
+
+$("#myModal").modal("hide");
+
 timeHandle = setInterval("setTimeInfo(loadTime)",60000);
 
 setInterval("intervalLoad()",600000);
 
 setInterval("setObserver()",10000);
 
+setObserver();
+
+identifyUser();
 ');
 
 ?>
