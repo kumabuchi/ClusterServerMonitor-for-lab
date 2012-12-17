@@ -162,7 +162,7 @@ function refresh(){
 	$("#about-info").empty();
 	$("img").remove();
 	$("table").remove();
-	$("#chart").fadeOut();
+	$("#chart").fadeOut(0);
 	$("#chart-control").fadeOut(0);
 	$("#chart-title").fadeOut(0);
 }
