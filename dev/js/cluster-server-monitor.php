@@ -520,8 +520,8 @@ function sortAlert(row){
 
 function identifyUser(){
 	var idUrl = url+"/alert.php?identify=true";
-	$.getJSON(idURl,function(json){
-		if( json.identify = true ){
+	$.getJSON(idUrl,function(json){
+		if( json.identify = "true" ){
 			userName = json.user_name;
 			mailAddr = json.mail_addr;
 		}

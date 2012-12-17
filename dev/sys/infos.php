@@ -40,7 +40,7 @@ function decodeComm( $commOut ){
 	$retArray["lavg15"]= $arr[$index+2];
 	$arr = preg_split( "/[\s,]+/", $lines[4]);
 	$prefix = 0;
-	if( count($arr) == 16 )
+	if( $arr[0] != "" )
 		$prefix = -1;
 	$retArray["proc_r"] = $arr[1+$prefix];
 	$retArray["proc_b"] = $arr[2+$prefix];

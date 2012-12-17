@@ -17,6 +17,7 @@ $servs = array(
 // ###TOPコマンドで表示しない項目のユーザ,コマンド
 $filter = array(
 		"root",
+		"mysql",
 		"dbus",
 		"ntp",
 		"smmsp",

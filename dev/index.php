@@ -58,14 +58,15 @@ require_once("config.php");
 		           <a class="btn btn-success dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
 		           <ul class="dropdown-menu">
 		        	  <li><a href="#" id="all-clusters"><i class="icon-th-large"></i> all servers</a></li>
-		        	  <li><a href="#" id="history"><i class="icon-time"></i> history</a></li>
-		        	  <li><a href="#" id="alert-center"><i class="icon-envelope"></i> alert center</a></li>
 		        	  <li class="divider"></li>
 				  <?php
 					foreach( $servs as $name => $comm ){
 						print('<li><a href="#" id="'.$name.'"><i class="icon-ok"></i> '.$name.'</a></li>');
 					}
 				  ?>
+		        	  <li class="divider"></li>
+		        	  <li><a href="#" id="history"><i class="icon-time"></i> history</a></li>
+		        	  <li><a href="#" id="alert-center"><i class="icon-envelope"></i> alert center</a></li>
 			  </ul>
 		        </div>
  		        <a class="btn btn-warning" href="#" id="about"><i class="icon-hand-right icon-white"></i> about</a>
