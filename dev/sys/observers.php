@@ -2,8 +2,8 @@
 header("Content-Type: application/json; charset=utf-8");
 
 require_once("../config.php");
-require_once("utility.php");
 include_once("../ipmap.php");
+require_once("utility.php");
 
 $observers_file = $logdir . "/observers";
 $observer = $_SERVER['REMOTE_ADDR'];

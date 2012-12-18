@@ -3,25 +3,60 @@ header("Content-type: application/x-javascript");
 require_once("../config.php");
 
 print('
+/*
+ *************************
+ *** global variables  ***     
+ *************************
+ */
+
+/* rendering panel number */
 var panel = 0;
+/* processing flag */
 var ready = 0;
+/* url for ajax */
 var url = "'.$url.'/sys";
+/* sort order for top asc(1) or desc(-1) */
 var sortorder = 1;
+/* sort order for iostat */
 var sortorderio = 1;
+/* iostat data array */
 var iostatData = null;
+/* infos data array */
 var infosData = null;
+/* top data array */
 var topinfo = null;
+/* server name shown in top */
 var serverName = null;
+/* elapsed time from last load */
 var loadTime = 0;
+/* interval function handle for loadTime */
 var timeHandle = null;
+/* showing date for history */
 var hist_date = getDate();
+/* history data array */
 var hist_data = null;
+/* showing mode for history */
 var hist_mode = "lavg1";
+/* observers list array */
 var observers = null;
+/* users alert list array */
 var alerts = null;
+/* username for identification */
 var userName = null;
+/* mailaddr for identification */
 var mailAddr = null;
 
+
+
+/*
+ ****************************
+ *** rendering functions  ***     
+ ****************************
+ */
+
+/*
+ * initialize and rendering infos page
+ */
 function init(){
 	if( ready == 1 )
 		return;
@@ -132,6 +167,9 @@ function init(){
 	}
 }
 
+/*
+ * sort function for iostat
+ */
 function sortIO( server,row ){
         if( iostatData == null ){
 		return ;
@@ -147,12 +185,12 @@ function sortIO( server,row ){
 			html +=	"<tr><td>"+cluster[i].device+"</td><td>"+cluster[i].tps+"</td><td>"+cluster[i].blkr_s+"</td><td>"+cluster[i].blkw_s+"</td><td>"+cluster[i].blkr+"</td><td>"+cluster[i].blkw+"</td></tr>";
 	html += "</tbody></table>";
         $("#"+server+"-io").html("<h4>"+server+"</h4>"+html);
-	');
-	print('
         $(".bar").fadeOut(0);
 }
 
-
+/*
+ * refresh all pages ( all contents fadeOut )
+ */
 function refresh(){
 	sortorder = 1;
 	sortorderio = 1;
@@ -167,6 +205,9 @@ function refresh(){
 	$("#chart-title").fadeOut(0);
 }
 
+/*
+ * load and rendering top page
+ */
 function loadTop( cluster ){
 	ready = 1;
 	panel = cluster;
@@ -182,8 +223,7 @@ function loadTop( cluster ){
 			break;
 		');
 	}
-	print('}
-	');
+	print('}');
 	print('
 	$.getJSON(url+"/top.php?c="+cluster, function(datas){
 		topinfo = datas;
@@ -201,6 +241,9 @@ function loadTop( cluster ){
 	});
 }
 
+/*
+ * sort function for top
+ */
 function sortTop( row ){
         if( topinfo == null ){
 		return;
@@ -225,6 +268,9 @@ function sortTop( row ){
         $(".bar").fadeOut(0);
 }
 
+/*
+ * reload function ( called when refresh button is pushed )
+ */
 function reload(){
 	if( ready == 1 )
 		return;
@@ -256,6 +302,9 @@ function reload(){
 	}
 }
 
+/*
+ * interval load for infos page
+ */
 function intervalLoad(){
 	infosData = null;
 	iostatData = null;
@@ -264,6 +313,9 @@ function intervalLoad(){
 	setTimeInfo(0);
 }
 
+/*
+ * rendering time information
+ */
 function setTimeInfo(time){
 	if( time >= 10 ){ return; }
 	if( time == 0 ){ clearInterval(timeHandle); timeHandle = setInterval("setTimeInfo(loadTime)",60000); loadTime = 0;  $("#time-info").html("just now");}
@@ -274,6 +326,9 @@ function setTimeInfo(time){
 	loadTime++;
 }
 
+/*
+ * load and rendering history page
+ */
 function history(mode,date){
 	panel = 6;
 	ready = 1;
@@ -393,6 +448,9 @@ function history(mode,date){
         ready = 0;	
 }
 
+/*
+ * convert string to number in array contents
+ */
 function NumberInArray(inArray){
 	var retArray = new Array();
 	for( var i=0; i<inArray.length; i++){
@@ -401,6 +459,10 @@ function NumberInArray(inArray){
 	return retArray;
 }
 
+/*
+ * get date string
+ * @param fix : previous day(-1) or next day(1) 
+ */
 function getDate(fix){
 	var d = null;
 	if( fix == undefined ) d = new Date();
@@ -435,6 +497,9 @@ function setObserver(){
 	});	
 }
 
+/*
+ * remove alert from list
+ */
 function ar(pid,usr,cmd,server,mail){
 	var alertUrl = url+"/alert.php";
 	var params = "comm="+cmd+"&user="+usr+"&server="+server+"&pid="+pid+"&mailto="+mail+"&del=true";
@@ -456,6 +521,9 @@ function ar(pid,usr,cmd,server,mail){
 
 }
 
+/*
+ * rendering alert modal
+ */
 function am(pid,usr,cmd){
 	if( userName == null || mailAddr == null ){
 		$("#alert-body").html("<strong>Sorry!</strong> We cannot identify you, so you cannot use alert center.");
@@ -474,6 +542,9 @@ function am(pid,usr,cmd){
 	$("#myModal").modal("show");
 }
 
+/*
+ * save alert to list
+ */
 function saveAlert(){
 	var alertUrl = url+"/alert.php";
 	var params = "comm="+$(\'#comm\').html()+"&user="+$(\'#commuser\').html()+"&server="+$(\'#server\').html()+"&pid="+$(\'#pid\').html()+"&mailto="+$(\'#mailto\').val();
@@ -488,10 +559,16 @@ function saveAlert(){
 	});
 }
 
+/*
+ * dismiss site notification alert
+ */
 function dismissAlert(){
 	$(".alert").fadeOut(300);
 }
 
+/*
+ * sort function for alert list
+ */
 function sortAlert(row){
 	if( alerts == null ){
 		return;
@@ -518,6 +595,9 @@ function sortAlert(row){
 	$("#about-info").html(html+alertTable);
 }
 
+/*
+ * user identification function
+ */
 function identifyUser(){
 	var idUrl = url+"/alert.php?identify=true";
 	$.getJSON(idUrl,function(json){
@@ -529,6 +609,13 @@ function identifyUser(){
 }
 
 
+
+
+/*
+ *********************
+ ***  button links ***     
+ *********************
+ */
 
 $("#page-title").click(function(){
 	refresh();
@@ -615,23 +702,30 @@ $("#save-alert").click(function(){
 ');
 
 foreach( $servs as $name => $comm ){
-print('
-$("#'.$name.'").click(function(){
-	refresh();
-	loadTop("'.$name.'");
-});
-');
+	print('
+	$("#'.$name.'").click(function(){
+		refresh();
+		loadTop("'.$name.'");
+	});
+	');
 }
 print('
+/*
+ * rendering about page
+ */
 $("#about").click(function(){
 	panel = 5;
 	refresh();
 	$("#control").addClass("disabled");
 	$("#about-info").fadeIn(500);
 	var html = "<h3>about this application</h3><p class=\"lead\">Cluster Server Monitor can only be accessed from the network in kobe-u.<br/>Please feedback and request about this application...</p>";
+	html+= "<blockquote><h3>Mail Alert Center</h3><p class=\"lead\">We identify you by your IP address.<br/>You can set mail alerts to your alert list.<br/>All alerts are checked whether the program is running or not once an hour.<br/>You can set one alert to each pair: { PID, SERVER }.</p></blockquote>";
 	$("#about-info").html(html);
 });
 
+/*
+ * rendering alert center page
+ */
 $("#alert-center").click(function(){
 	panel = 7;
 	if( userName == null || mailAddr == null ){
@@ -667,6 +761,9 @@ $("#alert-center").click(function(){
 	});
 });
 
+/*
+ * initialize slider
+ */
 $(function(){
      $(\'#slider\').slider({
      showControls : true, 
@@ -677,17 +774,41 @@ $(function(){
 });
 
 
+
+/*
+ *********************
+ *** exec function ***     
+ *********************
+ */
+
+/*
+ * hide modal
+ */
 $("#myModal").modal("hide");
 
+/*
+ * set load time interval
+ */
 timeHandle = setInterval("setTimeInfo(loadTime)",60000);
 
+/*
+ * set infos load interval
+ */
 setInterval("intervalLoad()",600000);
 
+/*
+ * set observer check interval
+ */
 setInterval("setObserver()",10000);
 
+/*
+ * first rendering observers
+ */
 setObserver();
 
+/*
+ * user identification
+ */
 identifyUser();
 ');
 
-?>

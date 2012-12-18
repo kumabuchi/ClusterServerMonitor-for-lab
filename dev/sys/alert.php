@@ -7,8 +7,8 @@ $alertfile = "alerts.rc";
 if( !file_exists($logdir."/".$alertfile) ){
 	if( !file_put_contents($logdir."/".$alertfile, json_encode(Array())) ){
 		exit(); //error : can not create file
-    }
-    system("chmod 666 ".$logdir."/".$alertfile);
+	}
+	system("chmod 666 ".$logdir."/".$alertfile);
 }
 
 if( ! isset( $ipmap[$_SERVER['REMOTE_ADDR']] ) ){
