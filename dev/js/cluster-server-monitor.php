@@ -250,7 +250,6 @@ function sortTop( row ){
 	}
 	$("#topinfo").remove();
         $(".bar").fadeIn(0);
-	console.log(topinfo);
 	topinfo.sort(function(a, b) {
 		return ( a[row] > b[row] ? sortorder : sortorder*(-1));
 	});
@@ -260,7 +259,7 @@ function sortTop( row ){
 	if( !!datas ){
       		for( var i=0; i<datas.length; i++){
                 	var data = datas[i];
-                	html += "<tr><td><a href=\"javascript:am(\'data.PID\',\'data.USER\',\'data.COMMAND\');\">"+data.PID+"</a></td><td>"+data.USER+"</td><td>"+data.PR+"</td><td>"+data.NI+"</td><td>"+data.VIRT+"</td><td>"+data.RES+"</td><td>"+data.SHR+"</td><td>"+data.S+"</td><td>"+data["%CPU"]+"</td><td>"+data["%MEM"]+"</td><td>"+data.TIME+"</td><td>"+data.COMMAND+"</td></tr>";
+			html += "<tr><td><a href=\"javascript:am(\'"+data.PID+"\',\'"+data.USER+"\',\'"+data.COMMAND+"\');\">"+data.PID+"</a></td><td>"+data.USER+"</td><td>"+data.PR+"</td><td>"+data.NI+"</td><td>"+data.VIRT+"</td><td>"+data.RES+"</td><td>"+data.SHR+"</td><td>"+data.S+"</td><td>"+data["%CPU"]+"</td><td>"+data["%MEM"]+"</td><td>"+data.TIME+"</td><td>"+data.COMMAND+"</td></tr>";
         	}
 	}
         html += "</tbody></table>";
@@ -462,6 +461,7 @@ function NumberInArray(inArray){
 /*
  * get date string
  * @param fix : previous day(-1) or next day(1) 
+ *              no change (0) or today()(undefined)
  */
 function getDate(fix){
 	var d = null;
@@ -476,6 +476,9 @@ function getDate(fix){
         return d.getFullYear()+""+month+""+day;
 }
 
+/*
+ * load and rendering observers
+ */
 function setObserver(){
 	var obstmp = new Array();
 	$.getJSON(url+"/observers.php", function(data){
@@ -503,7 +506,6 @@ function setObserver(){
 function ar(pid,usr,cmd,server,mail){
 	var alertUrl = url+"/alert.php";
 	var params = "comm="+cmd+"&user="+usr+"&server="+server+"&pid="+pid+"&mailto="+mail+"&del=true";
-	console.log(alertUrl+"?"+params);
 	$.getJSON(alertUrl+"?"+params,function(status){
 		if( status.delete == "success" ){
 			$("#alert-"+pid).fadeOut(500);
