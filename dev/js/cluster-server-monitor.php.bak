@@ -4,20 +4,6 @@ require_once("../config.php");
 
 print('
 /*
- * Cluster Server Monitor ver.beta
- * --server monitoring system--
- *
- * written by Kenji KUMABUCHI
- * k.kumabuchi@gmail.com
- *
- * This application is MIT LICENSE.
- *
- */
-
-
-
-
-/*
  *************************
  *** global variables  ***     
  *************************
@@ -63,9 +49,6 @@ var mailAddr = null;
 var dfData = null;
 
 
-
-
-
 /*
  ****************************
  *** rendering functions  ***     
@@ -85,17 +68,11 @@ function init(){
 	$("#tables").fadeIn(0);
 	$(".bar").fadeIn(0);
 	$("#control").removeClass("disabled");
-
-
-	/*
-	 * load infos ( CPU, MEMORY, LOADAVERAGE, PROCESS )
-	 */
 	if( infosData == null )
 		$.get(url+"/infos.php", infosCallback);
 	else
 		infosCallback(infosData);
 	
-	// callback function for infos( CPU, MEMORY, LOADAVERAGE, PROCESS )
 	function infosCallback(data){
 
 		infosData = data;
@@ -104,46 +81,36 @@ function init(){
 ');
 
 	foreach( $servs as $name => $comm ){
-		print('
-		if( !!data["'.$name.'"] )
-			loadAvgHtml += "<tr><td>'.$name.'</td><td>"+data["'.$name.'"].lavg1+"</td><td>"+data["'.$name.'"].lavg5+"</td><td>"+data["'.$name.'"].lavg15+"</td></tr>";
-		');
+		print('	if( !!data["'.$name.'"] )loadAvgHtml += "<tr><td>'.$name.'</td><td>"+data["'.$name.'"].lavg1+"</td><td>"+data["'.$name.'"].lavg5+"</td><td>"+data["'.$name.'"].lavg15+"</td></tr>";');
 	}
-	print('
-		loadAvgHtml += "</tbody></table>";
-		var procsHtml   = "<table class=\"table table-striped\"><thead><tr><th></th><th>running</th><th>blocked</th><tr></thead><tbody>";
-	 ');
+	print('loadAvgHtml += "</tbody></table>";
+
+		var procsHtml   = "<table class=\"table table-striped\"><thead><tr><th></th><th>running</th><th>blocked</th><tr></thead><tbody>"; ');
 	foreach( $servs as $name => $comm ){
-		print('
-		if( !!data["'.$name.'"] )
-			procsHtml += "<tr><td>'.$name.'</td><td>"+data["'.$name.'"].proc_r+"</td><td>"+data["'.$name.'"].proc_b+"</td></tr>";
-		');
+		print('	if( !!data["'.$name.'"] )
+			procsHtml += "<tr><td>'.$name.'</td><td>"+data["'.$name.'"].proc_r+"</td><td>"+data["'.$name.'"].proc_b+"</td></tr>";');
 	}	
+	print('	procsHtml += "</tbody></table>";');
+
 	print('
-		procsHtml += "</tbody></table>";
         	$("#lavg").append(loadAvgHtml);
 		$("#procs").append(procsHtml);
 	');
 	
 	foreach( $servs as $name => $key ){
-		print('
-		$("#'.$name.'-mem").append( buildMemHtml(data["'.$name.'"]) );
-		');
+		print('$("#'.$name.'-mem").append( buildMemHtml(data["'.$name.'"]) );');
 	}
 		
 	foreach( $servs as $name => $key ){
-		print('
-		$("#'.$name.'-cpu").append( buildCpuHtml(data["'.$name.'"]) );
-		');
+		print('$("#'.$name.'-cpu").append( buildCpuHtml(data["'.$name.'"]) );');
 	}
 	
 	print('
-		// display on ( loading off )
 	    	$(".bar").fadeOut(0);
 		$("#slider").fadeIn(0);
+		$(".slide").fadeIn(0);
 		ready = 0;
 
-		// HTML rendering function for CPU
 		function buildCpuHtml(clusterArr){
 			if( !clusterArr )
 				return;
@@ -156,7 +123,6 @@ function init(){
 			return html;
 		}
 		
-		// HTML rendering function for MEMORY
 		function buildMemHtml(clusterArr){
 			if( !clusterArr )
 				return;
@@ -171,9 +137,6 @@ function init(){
 		}
 	}
 	
-	/*
-	 * load Input/Output status
-	 */
 	if( iostatData == null ){
 		iostatData = {};
 		$.get(url+"/iostat.php", iostatCallback);
@@ -181,18 +144,14 @@ function init(){
 		iostatCallback(iostatData);
 	}
 	
-	// callback function for I/O
 	function iostatCallback(data){
 	');
 
 	foreach( $servs as $name => $comm ){
-		print('
-		if( data["'.$name.'"] ) $("#'.$name.'-io").html("<h4>'.$name.'</h4>"+ buildIOstatHtml(\''.$name.'\',data["'.$name.'"] ? data["'.$name.'"] :null) ); else  $("#'.$name.'-io").html("");
-		');
+		print('if( data["'.$name.'"] ) $("#'.$name.'-io").html("<h4>'.$name.'</h4>"+ buildIOstatHtml(\''.$name.'\',data["'.$name.'"] ? data["'.$name.'"] :null) ); else  $("#'.$name.'-io").html("");');
 	}
 
 	print('
-		// HTML rendering function for I/O
 		function buildIOstatHtml(server, cluster ){
 			iostatData[server] = cluster;
 			cluster.sort(function(a,b){
@@ -208,10 +167,7 @@ function init(){
 
 	}
 
-
-	/*
-	 * load DISK SPACE
-	 */
+	
 	if( dfData == null ){
 		dfData = {};
 		$.get(url+"/df.php", dfCallback);
@@ -219,21 +175,14 @@ function init(){
 		dfCallback(dfData);
 	}
 	
-	// callback function for DISK SPACE
 	function dfCallback(data){
 	');
 
 	foreach( $servs as $name => $comm ){
-		print('
-			if( data["'.$name.'"] )
-				$("#'.$name.'-df").html("<h4>'.$name.'</h4>"+ buildDfHtml(\''.$name.'\',data["'.$name.'"] ? data["'.$name.'"] :null) ); 
-			else
-				$("#'.$name.'-df").html("");
-		');
+		print('if( data["'.$name.'"] ) $("#'.$name.'-df").html("<h4>'.$name.'</h4>"+ buildDfHtml(\''.$name.'\',data["'.$name.'"] ? data["'.$name.'"] :null) ); else  $("#'.$name.'-df").html("");');
 	}
 
 	print('
-		// HTML rendering function for DISK SPACE
 		function buildDfHtml(server, cluster ){
 			dfData[server] = cluster;
  			var html = "<table class=\"table table-striped\"><thead><tr><th>Filesystem</th><th>Size</th><th>Used</th><th>Avail</th><th>Use%</th><th>Mouted on</th><tr></thead><tbody>";
@@ -250,10 +199,8 @@ function init(){
 
 }
 
-
 /*
  * sort function for iostat
- * ( not using )
  */
 function sortIO( server,row ){
         if( iostatData == null ){
@@ -309,12 +256,10 @@ function loadTop( cluster ){
 			break;
 		');
 	}
+	print('}');
 	print('
-	}
 	$.getJSON(url+"/top.php?c="+cluster, function(datas){
 		topinfo = datas;
-		
-		// HTML renderging for TOP INFO
 		var html = "<table id=\"topinfo\" class=\"table table-striped\"><thead><tr><th><a href=\"javascript:sortTop(\'PID\');\">PID</a></th><th><a href=\"javascript:sortTop(\'USER\');\">USER</a></th><th><a href=\"javascript:sortTop(\'PR\');\">PR</a></th><th><a href=\"javascript:sortTop(\'NI\');\">NI</a></th><th><a href=\"javascript:sortTop(\'VIRT\');\">VIRT</a></th><th><a href=\"javascript:sortTop(\'RES\');\">RES</a></th><th><a href=\"javascript:sortTop(\'SHR\');\">SHR</a></th><th><a href=\"javascript:sortTop(\'S\');\">S</a></th><th><a href=\"javascript:sortTop(\'%CPU\');\">%CPU</a></th><th><a href=\"javascript:sortTop(\'%MEM\');\">%MEM</a></th><th><a href=\"javascript:sortTop(\'TIME\');\">TIME+</a></th><th><a href=\"javascript:sortTop(\'COMMAND\');\">COMMAND</a.</th><tr></thead><tbody>";
 		if( !!datas ){
 			for( var i=0; i<datas.length; i++){
@@ -323,8 +268,6 @@ function loadTop( cluster ){
 			}
 		}
 		html += "</tbody></table>";
-
-		// display on
 		$("#each").append(html);	
 		$(".bar").fadeOut(0);
 		ready = 0;
@@ -338,16 +281,13 @@ function sortTop( row ){
         if( topinfo == null ){
 		return;
 	}
-	// display off
 	$("#topinfo").remove();
         $(".bar").fadeIn(0);
-	// sort execution
 	topinfo.sort(function(a, b) {
 		return ( a[row] > b[row] ? sortorder : sortorder*(-1));
 	});
 	sortorder *= -1;
 	var datas = topinfo;
-	// HTML rendering for TOP INFO
 	var html = "<table id=\"topinfo\" class=\"table table-striped\"><thead><tr><th><a href=\"javascript:sortTop(\'PID\');\">PID</a></th><th><a href=\"javascript:sortTop(\'USER\');\">USER</a></th><th><a href=\"javascript:sortTop(\'PR\');\">PR</a></th><th><a href=\"javascript:sortTop(\'NI\');\">NI</a></th><th><a href=\"javascript:sortTop(\'VIRT\');\">VIRT</a></th><th><a href=\"javascript:sortTop(\'RES\');\">RES</a></th><th><a href=\"javascript:sortTop(\'SHR\');\">SHR</a></th><th><a href=\"javascript:sortTop(\'S\');\">S</a></th><th><a href=\"javascript:sortTop(\'%CPU\');\">%CPU</a></th><th><a href=\"javascript:sortTop(\'%MEM\');\">%MEM</a></th><th><a href=\"javascript:sortTop(\'TIME\');\">TIME+</a></th><th><a href=\"javascript:sortTop(\'COMMAND\');\">COMMAND</a></th><tr></thead><tbody>";
 	if( !!datas ){
       		for( var i=0; i<datas.length; i++){
@@ -356,7 +296,6 @@ function sortTop( row ){
         	}
 	}
         html += "</tbody></table>";
-	// display on
         $("#each").append(html);
         $(".bar").fadeOut(0);
 }
@@ -436,7 +375,6 @@ function history(mode,date){
 	hist_date = date;
 	hist_mode = mode;
 
-	// chart building function 
 	function buildChart(data){
 		$("#chart").fadeIn(0);
 		$("#chart-title").fadeIn(0);
@@ -671,12 +609,10 @@ function sortAlert(row){
 		return;
 	}
 	$("#about-indo").empty();
-	// sort execution
 	alerts.sort(function(a, b) {
 		return ( a[row] < b[row]  ? sortorder : sortorder*(-1));
 	});
 	sortorder *= -1;
-	// HTML rendering for alert list
 	var html = "<h3>Mail Alert Center</h3><p class=\"lead\">Your alert list.</p>";
 	var alertTable = "<table id=\"alert-info\" class=\"table table-striped\"><thead><tr><th><a href=\"javascript:sortAlert(\'PID\');\">PID</a></th><th><a href=\"javascript:sortAlert(\'SERVER\');\">SERVER</a></th><th><a href=\"javascript:sortAlert(\'COMMAND\');\">COMMAND</a></th><th><a href=\"javascript:sortAlert(\'COMMUSER\');\">COMMAND USER</a></th><th><a href=\"javascript:sortAlert(\'MAILTO\');\">MAIL TO</a></th><th><a href=\"#\">delete</a></th></tr></thead><tbody>";
 	if( alerts.length != 0 ){
@@ -691,7 +627,6 @@ function sortAlert(row){
 	}else{
 		alertTable = "<p class=\"text-info\">Your alert list is empty.";
 	}
-	// display on
 	$("#about-info").html(html+alertTable);
 }
 
@@ -777,6 +712,7 @@ $("#side-menu").click(function(){
         $("#side-menu").animate({width: "toggle"}, 300);
 });
 
+
 $("#datepicker").datepicker({
         changeMonth: true,
         changeYear: true,
@@ -809,7 +745,6 @@ foreach( $servs as $name => $comm ){
 	');
 }
 print('
-
 /*
  * rendering about page
  */
@@ -839,10 +774,7 @@ $("#alert-center").click(function(){
 	alerts = [];
         $(".bar").fadeIn(0);
 	var html = "<h3>Mail Alert Center</h3><p class=\"lead\">Your alert list.</p>";
-
-	// load alert list
 	$.getJSON(url+"/alert.php",function(data){
-		// rendering alert center
 		var alertTable = "<table id=\"alert-info\" class=\"table table-striped\"><thead><tr><th><a href=\"javascript:sortAlert(\'PID\');\">PID</a></th><th><a href=\"javascript:sortAlert(\'SERVER\');\">SERVER</a></th><th><a href=\"javascript:sortAlert(\'COMMAND\');\">COMMAND</a></th><th><a href=\"javascript:sortAlert(\'COMMUSER\');\">COMMAND USER</a></th><th><a href=\"javascript:sortAlert(\'MAILTO\');\">MAIL TO</a></th><th><a href=\"#\">delete</a></th></tr></thead><tbody>";
 		if( data.count != 0 ){
 			for( var key in data.alert ){
@@ -859,7 +791,6 @@ $("#alert-center").click(function(){
 		}else{
 			alertTable = "<p class=\"text-info\">Your alert list is empty.";
 		}
-		// display on
         	$(".bar").fadeOut(0);
 		$("#about-info").html(html+alertTable);
 	});
