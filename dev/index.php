@@ -72,7 +72,7 @@ require_once("config.php");
 		    </div>
 		</div>
 
-		<div id="slider" class="span12" style="height:750px;">  <!-- SLIDER -->
+		<div id="slider" class="span12" style="height:900px;">  <!-- SLIDER -->
 
 		<div class="slide slide-controls" style="display:none;"> <!-- slide1 -->
                 <div id="cpu" class="span12">

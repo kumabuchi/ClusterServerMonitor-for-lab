@@ -9,11 +9,11 @@ print('
  *
  * written by Kenji KUMABUCHI
  * k.kumabuchi@gmail.com
+ * https://github.com/kumabuchi/ClustgerServerMonitor-for-lab
  *
  * This application is MIT LICENSE.
  *
  */
-
 
 
 
@@ -71,6 +71,8 @@ var dfData = null;
  *** rendering functions  ***     
  ****************************
  */
+
+
 
 /*
  * initialize and rendering infos page
@@ -239,7 +241,7 @@ function init(){
  			var html = "<table class=\"table table-striped\"><thead><tr><th>Filesystem</th><th>Size</th><th>Used</th><th>Avail</th><th>Use%</th><th>Mouted on</th><tr></thead><tbody>";
 			for( var i=0; i<cluster.length; i++){
 				var sp = cluster[i].filesystem.split("/");
-				var filesystem = sp[sp.length-1];
+				var filesystem = sp[sp.length-1] == "" ? sp[sp.length-2] : sp[sp.length-1];
 				html +=	"<tr><td title=\""+cluster[i].filesystem+"\">"+filesystem+"</td><td>"+cluster[i].size+"</td><td>"+cluster[i].used+"</td><td>"+cluster[i].avail+"</td><td>"+cluster[i]["use%"]+"</td><td title=\""+cluster[i].mount+"\">"+cluster[i].mount+"</td></tr>";
 			}
 			html +=	"</tbody></table>";
@@ -249,6 +251,7 @@ function init(){
 	}
 
 }
+
 
 
 /*
@@ -273,6 +276,35 @@ function sortIO( server,row ){
         $(".bar").fadeOut(0);
 }
 
+
+
+/*
+ * sort function for DISK SPACE
+ * ( not using )
+ */
+function sortDf( server,row ){
+        if( dfData == null ){
+		return ;
+	}
+        $(".bar").fadeIn(0);
+	DfData[server].sort(function(a, b) {
+		return ( a[row] > b[row] ? sortorder : sortorder*(-1));
+	});
+	sortorder *= -1;
+	var cluster = dfData[server];
+ 	var html = "<table class=\"table table-striped\"><thead><tr><th>Filesystem</th><th>Size</th><th>Used</th><th>Avail</th><th>Use%</th><th>Mouted on</th><tr></thead><tbody>";
+	for( var i=0; i<cluster.length; i++){
+		var sp = cluster[i].filesystem.split("/");
+		var filesystem = sp[sp.length-1];
+		html +=	"<tr><td title=\""+cluster[i].filesystem+"\">"+filesystem+"</td><td>"+cluster[i].size+"</td><td>"+cluster[i].used+"</td><td>"+cluster[i].avail+"</td><td>"+cluster[i]["use%"]+"</td><td title=\""+cluster[i].mount+"\">"+cluster[i].mount+"</td></tr>";
+	}
+	html += "</tbody></table>";
+        $("#"+server+"-df").html("<h4>"+server+"</h4>"+html);
+        $(".bar").fadeOut(0);
+}
+
+
+
 /*
  * refresh all pages ( all contents fadeOut )
  */
@@ -290,6 +322,8 @@ function refresh(){
 	$("#chart-title").fadeOut(0);
 	$("#df").fadeOut(0);
 }
+
+
 
 /*
  * load and rendering top page
@@ -331,6 +365,8 @@ function loadTop( cluster ){
 	});
 }
 
+
+
 /*
  * sort function for top
  */
@@ -360,6 +396,8 @@ function sortTop( row ){
         $("#each").append(html);
         $(".bar").fadeOut(0);
 }
+
+
 
 /*
  * reload function ( called when refresh button is pushed )
@@ -395,6 +433,8 @@ function reload(){
 	}
 }
 
+
+
 /*
  * interval load for infos page
  */
@@ -405,6 +445,8 @@ function intervalLoad(){
 	init();
 	setTimeInfo(0);
 }
+
+
 
 /*
  * rendering time information
@@ -418,6 +460,8 @@ function setTimeInfo(time){
 	else { $("#time-info").attr({"class":"lead text-info"});}
 	loadTime++;
 }
+
+
 
 /*
  * load and rendering history page
@@ -542,6 +586,8 @@ function history(mode,date){
         ready = 0;	
 }
 
+
+
 /*
  * convert string to number in array contents
  */
@@ -552,6 +598,8 @@ function NumberInArray(inArray){
 	}
 	return retArray;
 }
+
+
 
 /*
  * get date string
@@ -570,6 +618,8 @@ function getDate(fix){
         if (day < 10) {day = "0" + day;}
         return d.getFullYear()+""+month+""+day;
 }
+
+
 
 /*
  * load and rendering observers
@@ -595,6 +645,8 @@ function setObserver(){
 	});	
 }
 
+
+
 /*
  * remove alert from list
  */
@@ -618,6 +670,8 @@ function ar(pid,usr,cmd,server,mail){
 
 }
 
+
+
 /*
  * rendering alert modal
  */
@@ -639,6 +693,8 @@ function am(pid,usr,cmd){
 	$("#myModal").modal("show");
 }
 
+
+
 /*
  * save alert to list
  */
@@ -656,12 +712,16 @@ function saveAlert(){
 	});
 }
 
+
+
 /*
  * dismiss site notification alert
  */
 function dismissAlert(){
 	$(".alert").fadeOut(300);
 }
+
+
 
 /*
  * sort function for alert list
@@ -695,6 +755,8 @@ function sortAlert(row){
 	$("#about-info").html(html+alertTable);
 }
 
+
+
 /*
  * user identification function
  */
@@ -711,11 +773,14 @@ function identifyUser(){
 
 
 
+
 /*
  *********************
  ***  button links ***     
  *********************
  */
+
+
 
 $("#page-title").click(function(){
 	refresh();
@@ -802,13 +867,14 @@ $("#save-alert").click(function(){
 
 foreach( $servs as $name => $comm ){
 	print('
-	$("#'.$name.'").click(function(){
-		refresh();
-		loadTop("'.$name.'");
-	});
+$("#'.$name.'").click(function(){
+	refresh();
+	loadTop("'.$name.'");
+});
 	');
 }
 print('
+
 
 /*
  * rendering about page
@@ -822,6 +888,8 @@ $("#about").click(function(){
 	html+= "<blockquote><h3>Mail Alert Center</h3><p class=\"lead\">We identify you by your IP address.<br/>You can set mail alerts to your alert list.<br/>All alerts are checked whether the program is running or not once an hour.<br/>You can set one alert to each pair: { PID, SERVER }.</p></blockquote>";
 	$("#about-info").html(html);
 });
+
+
 
 /*
  * rendering alert center page
@@ -865,6 +933,8 @@ $("#alert-center").click(function(){
 	});
 });
 
+
+
 /*
  * initialize slider
  */
@@ -879,40 +949,56 @@ $(function(){
 
 
 
+
+
 /*
  *********************
  *** exec function ***     
  *********************
  */
 
+
+
 /*
  * hide modal
  */
 $("#myModal").modal("hide");
+
+
 
 /*
  * set load time interval
  */
 timeHandle = setInterval("setTimeInfo(loadTime)",60000);
 
+
+
 /*
  * set infos load interval
  */
 setInterval("intervalLoad()",600000);
+
+
 
 /*
  * set observer check interval
  */
 setInterval("setObserver()",10000);
 
+
+
 /*
  * first rendering observers
  */
 setObserver();
 
+
+
 /*
  * user identification
  */
 identifyUser();
+
+
 ');
 

@@ -2,4 +2,4 @@ order deny,allow
 deny from all
 allow from .cs.scitec.kobe-u.ac.jp
 allow from localhost
-allow from all
+#allow from all

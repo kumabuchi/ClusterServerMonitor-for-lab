@@ -47,7 +47,6 @@
 		if( $(".jquery-slider-page").last().hasClass("jquery-slider-page-current") ){
 			return;
 		}
-		console.log( $(".jquery-slider-pages").first().html() );
 		_last = _this;
                 _this = $this.children('.jquery-slider-element').first();
 		_draw();
