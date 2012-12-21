@@ -3,7 +3,15 @@ header("Content-Type: application/json; charset=utf-8");
 
 require_once("../config.php");
 require_once("utility.php");
-require_once("multilib.php");
+//require_once("multilib.php");
+
+foreach( $servs as $name => $comm ){
+	$out = null;
+	exec($comm." 'df -Ph;'", $out);
+	$retArray[$name] = decodeComm($out);
+}
+print( json_encode($retArray) );
+exit();
 
 if( isset($_GET["s"]) ){
 	system($servs[$_GET["s"]]." 'df -Ph;'");
@@ -24,7 +32,8 @@ if( isset($_GET["s"]) ){
 }
 
 function decodeComm( $commOut ){
-	$lines = explode("\n",$commOut);
+	//$lines = explode("\n",$commOut);
+	$lines = $commOut;
 	if( !is_Array( $lines ) )
 		return;
 	for( $i=1; $i<count($lines); $i++ ){

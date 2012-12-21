@@ -1,5 +1,5 @@
 <?php
-error_reporting( E_ERROR );
+//error_reporting( E_ERROR );
 
 $title   = "MONITOR DEV";
 $url     = "http://www.ai.cs.kobe-u.ac.jp/~kumabuchi/monitor/dev";

@@ -6,7 +6,7 @@
 * @param int $timeout タイムアウト秒数 0だと無制限
 * @return array 取得したソースコードの配列
 */
-function fetch_multi_url($url_list,$timeout=0) {
+function fetch_multi_url($url_list,$timeout=10) {
     $mh = curl_multi_init();
  
     foreach ($url_list as $i => $url) {
@@ -17,8 +17,8 @@ function fetch_multi_url($url_list,$timeout=0) {
         curl_setopt($conn[$i],CURLOPT_MAXREDIRS,3);
        
         //SSL証明書を無視
-        curl_setopt($conn[$i],CURLOPT_SSL_VERIFYPEER,false);
-        curl_setopt($conn[$i],CURLOPT_SSL_VERIFYHOST,false);
+        //curl_setopt($conn[$i],CURLOPT_SSL_VERIFYPEER,false);
+        //curl_setopt($conn[$i],CURLOPT_SSL_VERIFYHOST,false);
         
         //タイムアウト
         if ($timeout){
@@ -27,20 +27,22 @@ function fetch_multi_url($url_list,$timeout=0) {
        
         curl_multi_add_handle($mh,$conn[$i]);
     }
-   
+    
     //URLを取得
     //すべて取得するまでループ
     $active = null;
     do {
         $mrc = curl_multi_exec($mh,$active);
     } while ($mrc == CURLM_CALL_MULTI_PERFORM);
-   
+    
     while ($active and $mrc == CURLM_OK) {
         if (curl_multi_select($mh) != -1) {
             do {
                 $mrc = curl_multi_exec($mh,$active);
             } while ($mrc == CURLM_CALL_MULTI_PERFORM);
-        }
+        }else{
+		usleep(100000);
+	}
     }
    
     if ($mrc != CURLM_OK) {

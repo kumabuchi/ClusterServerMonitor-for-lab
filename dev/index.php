@@ -230,8 +230,7 @@ require_once("config.php");
 			</form>
 			<blockquote>
 			  <p>Mail Alert Center will send you Email when the program finished.<br/></p>
-			  <p>You can check your alert list on following page.</p>
-			  <p class="text-success">Menu > Servers > alert center</p>
+			  <p>You can check your alert list on <span class="text-success">alert center</span>.</p>
 			</blockquote>
 			<p id="modal-error" class="text-error"></p>
 			<p id="modal-success" class="text-info"></p>

@@ -6,7 +6,8 @@ require_once("utility.php");
 require_once("multilib.php");
 
 if( isset($_GET["s"]) ){
-	system($servs[$_GET["s"]]." ' uptime | sed -e 's/min,//'; vmstat 1 2;'");
+	exec($servs[$_GET["s"]]." ' uptime | sed -e 's/min,//'; vmstat 1 2;'",$out);
+	print( json_encode(array("server" => $_GET["s"], $_GET["s"] => decodeComm($out))) );
 }else{
 	write_log($_SERVER['REQUEST_URI']);
 	$url_list = array();
@@ -24,7 +25,10 @@ if( isset($_GET["s"]) ){
 }
 
 function decodeComm( $commOut ){
+	$lines = $commOut;
+	/*
 	$lines = explode("\n",$commOut);
+	*/
 	if( !is_Array( $lines ) )
 		return;
 	$arr = preg_split( "/[\s,]+/", $lines[0]);

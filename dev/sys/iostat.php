@@ -6,7 +6,9 @@ require_once("utility.php");
 require_once("multilib.php");
 
 if( isset($_GET["s"]) ){
-        system($servs[$_GET["s"]]." ' iostat 1 2'");
+        //system($servs[$_GET["s"]]." ' iostat 1 2'");
+        exec($servs[$_GET["s"]]." ' iostat 1 2'", $out);
+	print( json_encode(array( "server" => $_GET["s"], $_GET["s"] => decodeComm($out))) );
 }else{
 	write_log($_SERVER["REQUEST_URI"]);
         $url_list = array();
@@ -25,7 +27,8 @@ if( isset($_GET["s"]) ){
 
 
 function decodeComm( $commOut ){
-	$lines = explode("\n",$commOut);
+	//$lines = explode("\n",$commOut);
+	$lines = $commOut;
 	if( !is_Array( $lines ) )
 		return;
 	$status;

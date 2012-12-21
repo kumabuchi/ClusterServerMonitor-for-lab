@@ -92,15 +92,33 @@ function init(){
 	/*
 	 * load infos ( CPU, MEMORY, LOADAVERAGE, PROCESS )
 	 */
-	if( infosData == null )
-		$.get(url+"/infos.php", infosCallback);
-	else
-		infosCallback(infosData);
-	
-	// callback function for infos( CPU, MEMORY, LOADAVERAGE, PROCESS )
-	function infosCallback(data){
+	if( infosData == null ){
+	//	$.get(url+"/infos.php", infosCallback);
+		infosData = new Array();
+	');
+	foreach( $servs as $name => $comm ){
+		print('
+		$.get(url+"/infos.php?s='.$name.'", infosCallback);
+		');
+	}
+	print('
+	}else{
+		console.log(infosData);
+		infosRendering(infosData);
+	}
 
-		infosData = data;
+	// callback function for infos
+	function infosCallback(data){
+		infosData[data.server] = data[data.server];
+		if( countArray(infosData) == '.count($servs).' ){
+			infosRendering();
+		}
+	}	
+
+	// HTML rendering function for infos( CPU, MEMORY, LOADAVERAGE, PROCESS )
+	function infosRendering(){
+	
+		data = infosData;
 
 	 	var loadAvgHtml = "<table class=\"table table-striped\"><thead><tr><th></th><th>1m</th><th>5m</th><th>15m</th><tr></thead><tbody>";
 ');
@@ -178,13 +196,31 @@ function init(){
 	 */
 	if( iostatData == null ){
 		iostatData = {};
-		$.get(url+"/iostat.php", iostatCallback);
+		//$.get(url+"/iostat.php", iostatCallback);
+		');
+	foreach( $servs as $name => $comm ){
+		print('
+		$.get(url+"/iostat.php?s='.$name.'", iostatCallback);
+		');
+	}
+		print('
 	}else{
-		iostatCallback(iostatData);
+		iostatRendering(iostatData);
 	}
 	
 	// callback function for I/O
 	function iostatCallback(data){
+		iostatData[data.server] = data[data.server];
+		if( countArray(iostatData) == '.count($servs).' ){
+			iostatRendering();
+		}
+	}
+
+	// iostat rendering function
+	function iostatRendering(){
+
+		var data = iostatData;
+
 	');
 
 	foreach( $servs as $name => $comm ){
@@ -410,6 +446,7 @@ function reload(){
 	case 0:
 		infosData = null;
 		iostatData = null;
+		dfData = null;
 		init();
 		setTimeInfo(0);
 		break;
@@ -772,6 +809,16 @@ function identifyUser(){
 
 
 
+/*
+ * count object array length
+ */
+function countArray( array ){
+	var num = 0;
+	for( i in array ){
+		num++;
+	}
+	return num;
+}
 
 
 /*
