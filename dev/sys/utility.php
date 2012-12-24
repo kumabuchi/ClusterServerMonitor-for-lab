@@ -55,6 +55,13 @@ function send_alert_mail( $mailto, $pid, $server, $comm, $commuser ){
 	system($mail_command.' "echo -e ' .$contents. ' | mail -s ' .$subject. ' ' .$mailto. '"');
 }
 
+function marge_ipmap($ipmap, $add){
+	foreach( $add as $ip => $name ){
+		$ipmap[$ip] = $name;
+	}
+	return $ipmap;
+}
+
 function e($arg){
 	return escapeshellarg($arg);
 }

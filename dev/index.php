@@ -7,7 +7,7 @@ require_once("config.php");
     <head>
         <meta charset="utf-8">
         <title>Server Monitor</title>
-        <meta name="viewport" content="width=device-width, initial-scale=0.1">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="description" content="This program visualizes the command 'sar'. Server response Json format file.">
         <meta name="author" content="Kenji KUMABUCHI">
  	<link type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/blitzer/jquery-ui.css" rel="stylesheet" />
@@ -54,7 +54,7 @@ require_once("config.php");
                         <a class="btn btn-primary" href="#"><i class="icon-refresh icon-white"></i> Refresh</a>
  		        <a class="btn btn-danger" href="#" id="alert-center"><i class="icon-envelope icon-white"></i>  AlertCenter</a>
 	                <div class="btn-group" style="text-align:left;">
-		           <a class="btn btn-success" href="#"><i class="icon-th-large icon-white"></i> Servers</a>
+		           <a class="btn btn-success" href="#" id="servers"><i class="icon-th-large icon-white"></i> Servers</a>
 		           <a class="btn btn-success dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
 		           <ul class="dropdown-menu">
 		        	  <li><a href="#" id="all-clusters"><i class="icon-th-large"></i> all servers</a></li>

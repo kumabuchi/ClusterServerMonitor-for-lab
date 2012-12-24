@@ -61,7 +61,8 @@ var userName = null;
 var mailAddr = null;
 /* df data array */
 var dfData = null;
-
+/* showing server in top */
+var top_server = 0;
 
 
 
@@ -909,6 +910,33 @@ $("#myModal").modal({
 
 $("#save-alert").click(function(){
 	saveAlert();
+});
+
+$("#servers").click(function(){
+	switch( top_server ){
+	');
+$cnt = 0;
+$defaultserv = null;
+foreach( $servs as $name => $comm ){
+	if( $cnt == 0 ){
+		$defaultserv = $name;	
+	}
+print('
+	case '.$cnt.':
+		refresh();
+		loadTop("'.$name.'");
+		break;
+');	
+	$cnt++;
+}
+	print('
+	default :
+		refresh();
+		loadTop("'.$defaultserv.'");
+		top_server=0;
+		break;		
+	}
+	top_server++;
 });
 ');
 

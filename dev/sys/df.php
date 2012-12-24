@@ -13,6 +13,7 @@ foreach( $servs as $name => $comm ){
 print( json_encode($retArray) );
 exit();
 
+/*
 if( isset($_GET["s"]) ){
 	system($servs[$_GET["s"]]." 'df -Ph;'");
 }else{
@@ -30,6 +31,7 @@ if( isset($_GET["s"]) ){
 	}
 	print( json_encode( $clusterArray ) );
 }
+*/
 
 function decodeComm( $commOut ){
 	//$lines = explode("\n",$commOut);

@@ -2,6 +2,7 @@
 
 require_once("../config.php");
 require_once("../ipmap.php");
+require_once("utility.php");
 
 $alertfile = "alerts.rc";
 if( !file_exists($logdir."/".$alertfile) ){
@@ -44,7 +45,7 @@ if(!(isset($_GET["comm"]) && isset($_GET["user"]) && isset($_GET["server"]) && i
 	$comm_user = $_GET['user'];
 	$server = $_GET['server'];
 	$mailto = $_GET["mailto"];
-	if( !isset($servs[$server]) ){
+	if( !isset($servs[$server]) || $mailto=="" ){
 		print(json_encode(Array( "alert" => "fail")));
 		exit();
 	}

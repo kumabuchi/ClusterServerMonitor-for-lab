@@ -12,7 +12,7 @@ $observers = Array();
 
 if( $logging ){
 	if( file_exists( $observers_file ) ){
-		$observers_raw = explode("\n", file_get_contents($logdir . "/observers"));
+		$observers_raw = explode("\n", file_get_contents($observers_file));
 		for( $i = 0; $i < count($observers_raw)-1; $i++ ){
 			$spLine = explode(",", $observers_raw[$i]);
 			if( $timestamp - $spLine[0] <= 10 ){
