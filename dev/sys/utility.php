@@ -48,11 +48,11 @@ function check_alert( $server_name, $top_output ){
 }
 
 function send_alert_mail( $mailto, $pid, $server, $comm, $commuser ){
-	global $mail_command;
+	global $mail_serv;
 	$subject = "'[PID:".e($pid)."] Program Finished'";
 	$contents = "'Hi, this is server-monitor Mail Alert Center.\nThe program that you registered finished.\n\n[PID]\t\t".e($pid)."\n[SERVER]\t".e($server)."\n[COMMAND]\t".e($comm)."\n[USER]\t\t".e($commuser)."\nPlease check the program status and results.\n\nThis mail is send only.\nIf you want to contact me, please send mail to kumabuchi@ai.cs.kobe-u.ac.jp'";
-	//print($mail_command.' "echo -e ' .$contents. ' | mail -s ' .$subject. ' ' .$mailto. '"');
-	system($mail_command.' "echo -e ' .$contents. ' | mail -s ' .$subject. ' ' .$mailto. '"');
+	//print($mail_serv.' "echo -e ' .$contents. ' | mail -s ' .$subject. ' ' .$mailto. '"');
+	system($mail_serv.' "echo -e ' .$contents. ' | mail -s ' .$subject. ' ' .$mailto. '"');
 }
 
 function marge_ipmap($ipmap, $add){

@@ -7,7 +7,11 @@ require_once("multilib.php");
 
 if( isset($_GET["s"]) ){
         //system($servs[$_GET["s"]]." ' iostat 1 2'");
-        exec($servs[$_GET["s"]]." ' iostat 1 2'", $out);
+	if(  $iostat_avail[$_GET["s"]] ){
+        	exec($servs[$_GET["s"]]." ' iostat 1 2'", $out);
+	}else{
+		$out = null;
+	}
 	print( json_encode(array( "server" => $_GET["s"], $_GET["s"] => decodeComm($out))) );
 }else{
 	write_log($_SERVER["REQUEST_URI"]);

@@ -6,10 +6,11 @@ require_once("config.php");
 <html lang="ja">
     <head>
         <meta charset="utf-8">
-        <title>Server Monitor</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title><?php print($title); ?></title>
+        <meta name="viewport" content="width=device-width, initial-scale=0.1">
         <meta name="description" content="This program visualizes the command 'sar'. Server response Json format file.">
         <meta name="author" content="Kenji KUMABUCHI">
+ 	<link rel="shortcut icon" href="favicon.ico" >
  	<link type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/blitzer/jquery-ui.css" rel="stylesheet" />
         <link href="css/bootstrap.css" rel="stylesheet">
 	<link type="text/css" rel="stylesheet" href="css/loading-bar.css"/>
