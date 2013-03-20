@@ -1,0 +1,1 @@
+{"status":"OK","server":"phoenix","data":{"days":"82","users":"2","lavg1":"4.89","lavg5":"4.74","lavg15":"4.76","proc_r":"12","proc_b":"0","mem_sw":"10160","mem_fr":"63711492","mem_bf":"176140","mem_ch":"33433496","swap_i":"0","swap_o":"0","io_bi":"0","io_bo":"0","sys_in":"4042","sys_cs":"2963","cpu_us":"50","cpu_sy":"0","cpu_id":"50","cpu_wt":"0"}}

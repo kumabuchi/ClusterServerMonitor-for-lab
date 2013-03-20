@@ -1,0 +1,1 @@
+{"status":"OK","server":"sarajevo","data":{"days":"10","users":"4","lavg1":"0.00","lavg5":"0.01","lavg15":"0.05","proc_r":"0","proc_b":"0","mem_sw":"0","mem_fr":"95816424","mem_bf":"133040","mem_ch":"2217148","swap_i":"0","swap_o":"0","io_bi":"0","io_bo":"0","sys_in":"110","sys_cs":"288","cpu_us":"0","cpu_sy":"0","cpu_id":"100","cpu_wt":"0"}}

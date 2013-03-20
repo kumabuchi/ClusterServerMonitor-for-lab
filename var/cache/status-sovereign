@@ -1,0 +1,1 @@
+{"status":"OK","server":"sovereign","data":{"days":"48","users":"6","lavg1":"0.01","lavg5":"0.03","lavg15":"0.00","proc_r":"5","proc_b":"0","cpu_us":"0.32","cpu_sy":"0.96","cpu_id":"98.71","cpu_wt":"0","mem_bf":"2176","mem_sw":"2051","mem_ch":"1656","mem_fr":"18000","swap_i":"0","swap_o":"0","io_bi":"0","io_bo":"0","sys_in":"0","sys_cs":"0"}}

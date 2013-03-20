@@ -1,0 +1,1 @@
+{"status":"OK","server":"hermes","data":[{"filesystem":"\/dev\/mapper\/VolGroup00-LogVol00","size":"140G","used":"120G","avail":"13G","use%":"91%","mount":"\/"},{"filesystem":"\/dev\/sda1","size":"99M","used":"38M","avail":"57M","use%":"40%","mount":"\/boot"},{"filesystem":"tmpfs","size":"2.0G","used":"0","avail":"2.0G","use%":"0%","mount":"\/dev\/shm"}]}
