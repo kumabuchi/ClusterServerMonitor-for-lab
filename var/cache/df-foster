@@ -1,1 +1,0 @@
-{"status":"OK","server":"foster","data":[{"filesystem":"\/dev\/mapper\/VolGroup00-LogVol00","size":"448G","used":"274G","avail":"152G","use%":"65%","mount":"\/"},{"filesystem":"\/dev\/sda1","size":"99M","used":"27M","avail":"68M","use%":"29%","mount":"\/boot"},{"filesystem":"tmpfs","size":"1005M","used":"0","avail":"1005M","use%":"0%","mount":"\/dev\/shm"}]}

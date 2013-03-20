@@ -1,1 +1,0 @@
-{"status":"OK","server":"nova","data":{"days":"151","users":"3","lavg1":"0.00","lavg5":"0.00","lavg15":"0.00","proc_r":"0","proc_b":"0","mem_sw":"2249820","mem_fr":"1206696","mem_bf":"287552","mem_ch":"6433528","swap_i":"0","swap_o":"0","io_bi":"0","io_bo":"0","sys_in":"120","sys_cs":"22","cpu_us":"0","cpu_sy":"0","cpu_id":"100","cpu_wt":"0"}}

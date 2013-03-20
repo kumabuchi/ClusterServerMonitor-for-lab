@@ -1,1 +1,0 @@
-{"status":"OK","server":"vader","data":{"days":"48","users":"0","lavg1":"0.00","lavg5":"0.01","lavg15":"0.00","proc_r":"3","proc_b":"0","cpu_us":"0.24","cpu_sy":"1.67","cpu_id":"98.09","cpu_wt":"0","mem_bf":"1161","mem_sw":"853","mem_ch":"378","mem_fr":"14000","swap_i":"0","swap_o":"0","io_bi":"0","io_bo":"0","sys_in":"0","sys_cs":"0"}}

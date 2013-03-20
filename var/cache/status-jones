@@ -1,1 +1,0 @@
-{"status":"OK","server":"jones","data":{"days":"189","users":"0","lavg1":"0.16","lavg5":"0.04","lavg15":"0.01","proc_r":"4","proc_b":"0","cpu_us":"0.69","cpu_sy":"1.85","cpu_id":"97.46","cpu_wt":"0","mem_bf":"1397","mem_sw":"1028","mem_ch":"270","mem_fr":"13000","swap_i":"0","swap_o":"0","io_bi":"0","io_bo":"0","sys_in":"0","sys_cs":"0"}}
