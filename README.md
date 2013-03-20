@@ -3,5 +3,5 @@ ClusterServerMonitor-for-lab
 
 HPC Cluster Server Monitor System for laboratory.  
   
-It is a program for the laboratory.  
+It is the program for the laboratory.  
 
