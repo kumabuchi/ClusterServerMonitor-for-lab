@@ -32,13 +32,13 @@ function sendMail($addr, $subject, $body){
     $mail->SMTPSecure = "ssl";
     $mail->Host       = "smtp.gmail.com";
     $mail->Port       = 465;
-    $mail->Username   = "server.monitor.cs24@gmail.com";
-    $mail->Password   = "123456cs24";
+    $mail->Username   = "***";
+    $mail->Password   = "###";
     $mail->CharSet    = "iso-2022-jp";
     $mail->Encoding   = "7bit";
-    $mail->From       = "server.monitor.cs24@gmail.com";
+    $mail->From       = "***";
     $mail->FromName   = mb_encode_mimeheader(mb_convert_encoding("SERVER-MONITOR", "JIS", "utf-8"));
-    $mail->AddReplyTo("server.monitor.cs24@gmail.com", mb_encode_mimeheader(mb_convert_encoding("SERVER-MONITOR", "JIS", "utf-8")));
+    $mail->AddReplyTo("***", mb_encode_mimeheader(mb_convert_encoding("SERVER-MONITOR", "JIS", "utf-8")));
     $mail->Subject    = mb_convert_encoding($subject, "JIS", "utf-8");
     $mail->Body       = mb_convert_encoding($body, "JIS", "utf-8");
     $mail->AddAddress($addr, mb_encode_mimeheader(mb_convert_encoding($addr, "JIS", "utf-8")));
